@@ -1,0 +1,61 @@
+---
+import Layout from '../../components/Layout.astro';
+import TagList from '../../components/TagList.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+const currentIndex = posts.findIndex((item) => item.slug === post.slug);
+const newerPost = posts[currentIndex - 1];
+const olderPost = posts[currentIndex + 1];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate,
+  dateModified: post.data.updatedDate ?? post.data.pubDate,
+  author: {
+    '@type': 'Person',
+    name: 'Alex Morgan'
+  },
+  mainEntityOfPage: Astro.url.toString()
+};
+---
+
+<Layout
+  title={`${post.data.title} | Blog`}
+  description={post.data.description}
+  image={post.data.heroImage}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  modifiedTime={(post.data.updatedDate ?? post.data.pubDate).toISOString()}
+>
+  <article>
+    <p><a href="/blog">← Back to blog</a></p>
+    <h1>{post.data.title}</h1>
+    <p class="meta">
+      Published {post.data.pubDate.toLocaleDateString()}
+      {post.data.updatedDate && ` · Updated ${post.data.updatedDate.toLocaleDateString()}`}
+      {post.data.readingTime && ` · ${post.data.readingTime} min read`}
+    </p>
+    <TagList tags={post.data.tags ?? []} />
+    <Content />
+  </article>
+
+  <nav class="pagination" aria-label="Post navigation">
+    {newerPost && <a href={`/blog/${newerPost.slug}`}>← {newerPost.data.title}</a>}
+    {olderPost && <a href={`/blog/${olderPost.slug}`}>{olderPost.data.title} →</a>}
+  </nav>
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+</Layout>
