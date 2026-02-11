@@ -1,0 +1,32 @@
+---
+import Layout from '../../components/Layout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const courses = await getCollection('courses');
+type Course = (typeof courses)[number];
+const grouped = courses.reduce((acc, course) => {
+  const key = course.data.status;
+  (acc[key] ??= []).push(course);
+  return acc;
+}, {} as Record<string, Course[]>);
+---
+
+<Layout title="Courses" description="Courses for students and teachers in computer science.">
+  <h1>Courses</h1>
+  {Object.entries(grouped).map(([status, items]) => (
+    <section>
+      <h2>{status}</h2>
+      <div class="grid">
+        {items.map((course) => (
+          <Card
+            title={course.data.title}
+            description={course.data.description}
+            href={`/courses/${course.slug}`}
+            meta={`${course.data.level} · ${course.data.duration}`}
+          />
+        ))}
+      </div>
+    </section>
+  ))}
+</Layout>

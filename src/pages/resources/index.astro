@@ -1,0 +1,32 @@
+---
+import Layout from '../../components/Layout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const resources = await getCollection('resources');
+type Resource = (typeof resources)[number];
+const grouped = resources.reduce((acc, resource) => {
+  const key = resource.data.type;
+  (acc[key] ??= []).push(resource);
+  return acc;
+}, {} as Record<string, Resource[]>);
+---
+
+<Layout title="Resources" description="Free classroom-ready tools, templates, and links.">
+  <h1>Resources</h1>
+  {Object.entries(grouped).map(([type, items]) => (
+    <section>
+      <h2>{type}</h2>
+      <div class="grid">
+        {items.map((resource) => (
+          <Card
+            title={resource.data.title}
+            description={resource.data.description}
+            href={`/resources/${resource.slug}`}
+            meta={resource.data.type}
+          />
+        ))}
+      </div>
+    </section>
+  ))}
+</Layout>
