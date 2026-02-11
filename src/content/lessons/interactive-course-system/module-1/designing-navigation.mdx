@@ -1,0 +1,40 @@
+---
+courseId: interactive-course-system
+moduleId: foundations
+moduleTitle: Foundations
+title: Designing Course Navigation
+description: Build a module-aware path with clear next and previous actions.
+order: 2
+estimatedMinutes: 30
+objectives:
+  - Group lessons by module.
+  - Keep route generation base-path safe.
+updatedDate: 2026-01-10
+---
+
+import LessonChecklist from '../../../../components/course/LessonChecklist';
+import Hint from '../../../../components/course/Hint.astro';
+
+# Designing Course Navigation
+
+Clean navigation lowers cognitive load and helps learners persist.
+
+## Sidebar strategy
+
+Use module groups with nested lessons and clear active state.
+
+## Checklist
+
+<LessonChecklist
+  client:load
+  courseId="interactive-course-system"
+  lessonSlug="designing-navigation"
+  componentId="nav-checklist"
+  items={['Group lessons by module', 'Sort lessons by order', 'Render prev/next links']}
+/>
+
+## Pro tip
+
+<Hint summary="Not sure where to start?">
+  Build the data shape in the route first, then pass a minimal structure into layout components.
+</Hint>

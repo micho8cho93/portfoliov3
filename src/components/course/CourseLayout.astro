@@ -1,0 +1,95 @@
+---
+import Layout from '../Layout.astro';
+import CourseSidebar from './CourseSidebar.astro';
+import CoursePager from './CoursePager.astro';
+import CourseTOC from './CourseTOC.astro';
+
+interface LessonItem {
+  slug: string;
+  title: string;
+  order: number;
+}
+
+interface ModuleItem {
+  moduleId: string;
+  moduleTitle: string;
+  lessons: LessonItem[];
+}
+
+interface PagerLesson {
+  slug: string;
+  title: string;
+}
+
+interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  pageTitle: string;
+  pageDescription: string;
+  courseSlug: string;
+  modules: ModuleItem[];
+  currentLessonSlug: string;
+  prevLesson?: PagerLesson;
+  nextLesson?: PagerLesson;
+  headings?: TocHeading[];
+}
+
+const {
+  pageTitle,
+  pageDescription,
+  courseSlug,
+  modules,
+  currentLessonSlug,
+  prevLesson,
+  nextLesson,
+  headings = []
+} = Astro.props;
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="course-shell">
+    <CourseSidebar courseSlug={courseSlug} modules={modules} currentLessonSlug={currentLessonSlug} />
+    <article class="course-main">
+      <slot />
+      <CoursePager courseSlug={courseSlug} prevLesson={prevLesson} nextLesson={nextLesson} />
+    </article>
+    <CourseTOC headings={headings} />
+  </div>
+</Layout>
+
+<style>
+  .course-shell {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .course-main {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-lg);
+  }
+
+  @media (min-width: 72rem) {
+    .course-shell {
+      grid-template-columns: 16rem minmax(0, 1fr) 14rem;
+    }
+  }
+
+  @media (max-width: 56rem) {
+    .course-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .course-main {
+      order: 2;
+    }
+  }
+</style>

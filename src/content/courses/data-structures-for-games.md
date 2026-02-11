@@ -1,6 +1,7 @@
 ---
 title: Data Structures for Games
 description: Explore arrays, graphs, and queues through game mechanics and level systems.
+courseId: data-structures-for-games
 level: Intermediate
 topics:
   - Arrays and lists

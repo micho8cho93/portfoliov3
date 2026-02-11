@@ -1,0 +1,37 @@
+---
+interface Props {
+  summary?: string;
+}
+
+const { summary = 'Hint' } = Astro.props;
+---
+
+<details class="hint">
+  <summary>{summary}</summary>
+  <div class="hint-body">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .hint {
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent-1) 8%, var(--bg-elevated));
+    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-md) 0;
+  }
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .hint-body {
+    margin-top: var(--space-sm);
+  }
+
+  .hint-body :global(*:last-child) {
+    margin-bottom: 0;
+  }
+</style>
