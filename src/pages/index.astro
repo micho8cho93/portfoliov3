@@ -1,4 +1,5 @@
 ---
+import { withBase } from "../utils/withBase";
 import Layout from "../components/Layout.astro";
 import Card from "../components/Card.astro";
 import { getCollection } from "astro:content";
@@ -53,8 +54,8 @@ const websiteSchema = {
           with feedback, and connect technical skills to community impact.
         </p>
         <div class="actions reveal-load reveal-load--cta">
-          <a class="button" href="/blog">Read teaching notes</a>
-          <a class="button secondary" href="/contact">Book a workshop</a>
+          <a class="button" href={withBase("/blog")}>Read teaching notes</a>
+          <a class="button secondary" href={withBase("/contact")}>Book a workshop</a>
         </div>
       </div>
 
@@ -92,7 +93,7 @@ const websiteSchema = {
             featuredCourse ? (
               <>
                 <h3>
-                  <a href={`/courses/${featuredCourse.slug}`}>
+                  <a href={withBase(`/courses/${featuredCourse.slug}`)}>
                     {featuredCourse.data.title}
                   </a>
                 </h3>
@@ -113,7 +114,7 @@ const websiteSchema = {
               <Card
                 title={course.data.title}
                 description={course.data.description}
-                href={`/courses/${course.slug}`}
+                href={withBase(`/courses/${course.slug}`)}
                 meta={`${course.data.level} · ${course.data.duration}`}
                 variant="course"
               />
@@ -127,7 +128,7 @@ const websiteSchema = {
             featuredProject ? (
               <>
                 <h3>
-                  <a href={`/projects/${featuredProject.slug}`}>
+                  <a href={withBase(`/projects/${featuredProject.slug}`)}>
                     {featuredProject.data.title}
                   </a>
                 </h3>
@@ -148,7 +149,7 @@ const websiteSchema = {
               <Card
                 title={project.data.title}
                 description={project.data.description}
-                href={`/projects/${project.slug}`}
+                href={withBase(`/projects/${project.slug}`)}
                 meta={`${project.data.year} · ${project.data.role}`}
                 variant="project"
               />
@@ -162,7 +163,7 @@ const websiteSchema = {
             featuredResource ? (
               <>
                 <h3>
-                  <a href={`/resources/${featuredResource.slug}`}>
+                  <a href={withBase(`/resources/${featuredResource.slug}`)}>
                     {featuredResource.data.title}
                   </a>
                 </h3>
@@ -181,7 +182,7 @@ const websiteSchema = {
               <Card
                 title={resource.data.title}
                 description={resource.data.description}
-                href={`/resources/${resource.slug}`}
+                href={withBase(`/resources/${resource.slug}`)}
                 meta={resource.data.type}
                 variant="resource"
               />
@@ -232,8 +233,8 @@ const websiteSchema = {
       strategy, let's design the next step.
     </p>
     <div class="actions">
-      <a class="button" href="/contact">Start a conversation</a>
-      <a class="button secondary" href="/courses">Explore all courses</a>
+      <a class="button" href={withBase("/contact")}>Start a conversation</a>
+      <a class="button secondary" href={withBase("/courses")}>Explore all courses</a>
     </div>
   </section>
 
