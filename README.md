@@ -98,6 +98,13 @@ Optional:
 
 ## 7) Deployment (static hosting)
 
+
+### GitHub Pages
+1. In GitHub, go to **Settings → Pages** and set **Build and deployment** to **GitHub Actions**.
+2. Ensure your default branch is `main` (or update `.github/workflows/deploy.yml` if different).
+3. Push to `main`; the **Deploy to GitHub Pages** workflow will build and publish `dist/`.
+4. For project repos (`<owner>/<repo>`), Astro automatically uses `base: /<repo>` in CI.
+
 ### Cloudflare Pages
 1. Connect repo.
 2. Build command: `npm run build`
@@ -115,4 +122,5 @@ Optional:
 
 ## Important configuration
 
-Update `site` in `astro.config.mjs` from `https://example.com` to your real domain for canonical URLs, sitemap, and RSS links.
+- `astro.config.mjs` now auto-configures `site` and `base` during GitHub Actions deploys so GitHub Pages URLs work for both user/org and project sites.
+- For local/dev builds (or non-GitHub deploys), replace the `https://example.com` fallback with your real canonical domain for correct sitemap/RSS links.
