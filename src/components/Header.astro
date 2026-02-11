@@ -1,32 +1,40 @@
 ---
+import { stripBasePath, normalizePathname } from "../utils/pathname";
 import { withBase } from "../utils/withBase";
+
+const currentPathname = normalizePathname(stripBasePath(Astro.url.pathname));
 
 const navGroups = [
   {
     label: "Learn",
     items: [
-      { href: "/courses", label: "Courses" },
-      { href: "/resources", label: "Resources" },
+      { route: "/courses", label: "Courses" },
+      { route: "/resources", label: "Resources" },
     ],
   },
   {
     label: "Read",
-    items: [{ href: "/blog", label: "Blog" }],
+    items: [{ route: "/blog", label: "Blog" }],
   },
   {
     label: "Build",
-    items: [{ href: "/projects", label: "Projects" }],
+    items: [{ route: "/projects", label: "Projects" }],
   },
   {
     label: "Connect",
-    items: [{ href: "/contact", label: "Contact" }],
+    items: [{ route: "/contact", label: "Contact" }],
   },
 ];
 ---
 
 <header class="site-header">
   <nav aria-label="Main navigation" class="container nav">
-    <a href={withBase("/")} class="brand" aria-label="CS Educator home">
+    <a
+      href={withBase("/")}
+      class="brand"
+      aria-label="CS Educator home"
+      aria-current={currentPathname === "/" ? "page" : undefined}
+    >
       <span class="brand-name">CS Educator</span>
       <span class="brand-tagline"
         >Computer science teaching & practical learning</span
@@ -40,21 +48,21 @@ const navGroups = [
             <li class="nav-group-label" aria-hidden="true">
               {group.label}
             </li>
-            {group.items.map((item) => (
-              <li>
-                <a
-                  class="nav-link"
-                  href={withBase(item.href)}
-                  aria-current={
-                    Astro.url.pathname === withBase(item.href)
-                      ? "page"
-                      : undefined
-                  }
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {group.items.map((item) => {
+              const itemRoute = normalizePathname(item.route);
+
+              return (
+                <li>
+                  <a
+                    class="nav-link"
+                    href={withBase(itemRoute)}
+                    aria-current={currentPathname === itemRoute ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
             {groupIndex !== navGroups.length - 1 && (
               <li class="nav-separator" aria-hidden="true">
                 •
