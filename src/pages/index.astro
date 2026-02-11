@@ -3,14 +3,15 @@ import Layout from '../components/Layout.astro';
 import Card from '../components/Card.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-  .slice(0, 3);
 const courses = (await getCollection('courses')).filter((item) => item.data.featured).slice(0, 3);
 const projects = (await getCollection('projects'))
   .sort((a, b) => Number(b.data.featured ?? false) - Number(a.data.featured ?? false) || b.data.year - a.data.year)
   .slice(0, 3);
 const resources = (await getCollection('resources')).slice(0, 3);
+
+const [featuredCourse, ...courseRemainder] = courses;
+const [featuredProject, ...projectRemainder] = projects;
+const [featuredResource, ...resourceRemainder] = resources;
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -33,89 +34,312 @@ const websiteSchema = {
   title="Alex Morgan | CS Educator & Thought Leader"
   description="Teaching-focused portfolio and writing on computer science education."
 >
-  <section class="hero">
-    <p class="eyebrow">CS Educator & Athletic Director</p>
-    <h1>Helping students think like engineers, not just coders.</h1>
-    <p>
-      I design curriculum, courses, and tools that make computer science practical, rigorous, and human.
-    </p>
+  <section class="hero-manifesto">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Hero manifesto</p>
+        <h1>Helping students think like engineers, not just coders.</h1>
+        <p class="lead">
+          I design project-driven classes where students debug in public, revise with feedback, and connect technical
+          skills to community impact.
+        </p>
+        <div class="actions">
+          <a class="button" href="/blog">Read teaching notes</a>
+          <a class="button secondary" href="/contact">Book a workshop</a>
+        </div>
+      </div>
+
+      <aside class="signature-block" aria-label="Teaching thesis">
+        <p class="signature-label">Signature block</p>
+        <blockquote>
+          “Rigor belongs to every learner when we teach process, reflection, and iteration—not just syntax.”
+        </blockquote>
+        <p class="signature-meta">My teaching thesis: equitable CS through visible thinking routines.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="proof-practice">
+    <div class="proof-grid">
+      <div>
+        <p class="eyebrow">Proof of practice</p>
+        <h2>Courses, projects, and resources from the classroom floor</h2>
+        <p>
+          A snapshot of what I run, build, and share for teachers. Each stream highlights one flagship piece followed by
+          quick-access supporting items.
+        </p>
+      </div>
+
+      <div class="feature-panel">
+        <article class="featured-item">
+          <p class="label">Featured course</p>
+          {featuredCourse ? (
+            <>
+              <h3><a href={`/courses/${featuredCourse.slug}`}>{featuredCourse.data.title}</a></h3>
+              <p>{featuredCourse.data.description}</p>
+              <p class="meta">{featuredCourse.data.level} · {featuredCourse.data.duration}</p>
+            </>
+          ) : (
+            <p>Course showcase coming soon.</p>
+          )}
+        </article>
+
+        <div class="compact-grid">
+          {courseRemainder.map((course) => (
+            <Card
+              title={course.data.title}
+              description={course.data.description}
+              href={`/courses/${course.slug}`}
+              meta={`${course.data.level} · ${course.data.duration}`}
+            />
+          ))}
+        </div>
+
+        <article class="featured-item">
+          <p class="label">Featured project</p>
+          {featuredProject ? (
+            <>
+              <h3><a href={`/projects/${featuredProject.slug}`}>{featuredProject.data.title}</a></h3>
+              <p>{featuredProject.data.description}</p>
+              <p class="meta">{featuredProject.data.year} · {featuredProject.data.role}</p>
+            </>
+          ) : (
+            <p>Project spotlight coming soon.</p>
+          )}
+        </article>
+
+        <div class="compact-grid">
+          {projectRemainder.map((project) => (
+            <Card
+              title={project.data.title}
+              description={project.data.description}
+              href={`/projects/${project.slug}`}
+              meta={`${project.data.year} · ${project.data.role}`}
+            />
+          ))}
+        </div>
+
+        <article class="featured-item">
+          <p class="label">Featured resource</p>
+          {featuredResource ? (
+            <>
+              <h3><a href={`/resources/${featuredResource.slug}`}>{featuredResource.data.title}</a></h3>
+              <p>{featuredResource.data.description}</p>
+              <p class="meta">{featuredResource.data.type}</p>
+            </>
+          ) : (
+            <p>Resource feature coming soon.</p>
+          )}
+        </article>
+
+        <div class="compact-grid">
+          {resourceRemainder.map((resource) => (
+            <Card
+              title={resource.data.title}
+              description={resource.data.description}
+              href={`/resources/${resource.slug}`}
+              meta={resource.data.type}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="principles">
+    <p class="eyebrow">Pedagogy principles</p>
+    <h2>How I structure learning that lasts</h2>
+    <div class="principles-grid">
+      <article>
+        <h3>Studio over lecture</h3>
+        <p>Students spend most of class making, testing, and critiquing, with mini-lessons at point of need.</p>
+      </article>
+      <article>
+        <h3>Feedback loops first</h3>
+        <p>Every unit includes checkpoints, reflection prompts, and revision cycles so growth is visible.</p>
+      </article>
+      <article>
+        <h3>Identity and access</h3>
+        <p>I anchor technical work in student voice and real-world context to broaden who feels they belong in CS.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="conversion-band">
+    <p class="eyebrow">Conversion CTA band</p>
+    <h2>Bring this approach to your school or district</h2>
+    <p>Whether you need curriculum coaching, workshop facilitation, or program strategy, let's design the next step.</p>
     <div class="actions">
-      <a class="button" href="/blog">Read the blog</a>
-      <a class="button secondary" href="/contact">Book a workshop</a>
+      <a class="button" href="/contact">Start a conversation</a>
+      <a class="button secondary" href="/courses">Explore all courses</a>
     </div>
-  </section>
-
-  <section>
-    <h2>About</h2>
-    <p>
-      I teach CS through debugging routines, game design, and project-based assessment. My focus areas include
-      introductory programming pedagogy, formative feedback systems, and teacher coaching.
-    </p>
-  </section>
-
-  <section>
-    <h2>Latest blog posts</h2>
-    <div class="grid">
-      {posts.map((post) => (
-        <Card
-          title={post.data.title}
-          description={post.data.description}
-          href={`/blog/${post.slug}`}
-          meta={post.data.pubDate.toLocaleDateString()}
-        />
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <h2>Featured courses</h2>
-    <div class="grid">
-      {courses.map((course) => (
-        <Card
-          title={course.data.title}
-          description={course.data.description}
-          href={`/courses/${course.slug}`}
-          meta={`${course.data.level} · ${course.data.duration}`}
-        />
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <h2>Projects</h2>
-    <div class="grid">
-      {projects.map((project) => (
-        <Card
-          title={project.data.title}
-          description={project.data.description}
-          href={`/projects/${project.slug}`}
-          meta={`${project.data.year} · ${project.data.role}`}
-        />
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <h2>Resources</h2>
-    <div class="grid">
-      {resources.map((resource) => (
-        <Card
-          title={resource.data.title}
-          description={resource.data.description}
-          href={`/resources/${resource.slug}`}
-          meta={resource.data.type}
-        />
-      ))}
-    </div>
-  </section>
-
-  <section class="cta-row">
-    <a class="button" href="/courses">Courses</a>
-    <a class="button" href="/projects">Projects</a>
-    <a class="button" href="/resources">Resources</a>
-    <a class="button" href="/contact">Contact</a>
   </section>
 
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 </Layout>
+
+<style>
+  .eyebrow {
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent, #4f46e5);
+  }
+
+  .hero-manifesto,
+  .proof-practice,
+  .principles,
+  .conversion-band {
+    margin-block: 3.5rem;
+  }
+
+  .hero-grid,
+  .proof-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .lead {
+    font-size: 1.15rem;
+    max-width: 60ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .signature-block {
+    position: relative;
+    padding: 1.2rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--accent, #4f46e5) 40%, white);
+    background: color-mix(in oklab, var(--accent, #4f46e5) 10%, white);
+  }
+
+  .signature-block::before,
+  .signature-block::after {
+    position: absolute;
+    font-size: 2rem;
+    color: color-mix(in oklab, var(--accent, #4f46e5) 55%, black);
+    line-height: 1;
+  }
+
+  .signature-block::before {
+    content: '⟨';
+    top: 0.15rem;
+    left: 0.5rem;
+  }
+
+  .signature-block::after {
+    content: '⟩';
+    right: 0.5rem;
+    bottom: 0.15rem;
+  }
+
+  .signature-label {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .signature-block blockquote {
+    margin: 0.6rem 0;
+    font-size: 1.1rem;
+    font-weight: 650;
+  }
+
+  .signature-meta {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .feature-panel {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .featured-item {
+    padding: 1rem;
+    border: 1px solid #d8dee9;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+  }
+
+  .featured-item .label {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #475569;
+  }
+
+  .featured-item h3 {
+    margin: 0.4rem 0 0.35rem;
+    font-size: 1.22rem;
+  }
+
+  .featured-item .meta {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #475569;
+  }
+
+  .compact-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .principles-grid {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .principles-grid article {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d8dee9;
+  }
+
+  .conversion-band {
+    padding: 1.75rem;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+    border: 1px solid #dbeafe;
+  }
+
+  @media (min-width: 880px) {
+    .hero-grid {
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .proof-grid {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .feature-panel {
+      margin-top: 1.25rem;
+    }
+
+    .signature-block {
+      margin-top: 2rem;
+    }
+
+    .principles-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
