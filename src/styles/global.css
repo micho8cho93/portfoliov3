@@ -28,6 +28,13 @@
   --texture-a: rgb(15 118 110 / 24%);
   --texture-b: rgb(29 78 216 / 20%);
   --texture-noise: rgb(25 23 20 / 7%);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphatic: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --duration-reveal: 560ms;
 }
 
 * {
@@ -111,6 +118,32 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
+}
+
+.nav-link {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.25rem;
+  width: 100%;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent-2) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link[aria-current='page']::after {
+  transform: scaleX(1);
 }
 
 .brand {
@@ -210,7 +243,15 @@ small {
   padding: var(--space-md);
   background: var(--bg-elevated);
   box-shadow: var(--shadow-soft);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transform: translateY(8px);
+  opacity: 0;
+  animation: card-enter var(--duration-reveal) var(--ease-emphatic) both;
+  transition:
+    transform var(--duration-base) var(--ease-standard),
+    border-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    background-color var(--duration-base) var(--ease-standard),
+    outline-color var(--duration-base) var(--ease-standard);
 }
 
 .card::after {
@@ -220,7 +261,15 @@ small {
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+.card:nth-child(2n) {
+  animation-delay: 80ms;
+}
+
+.card:nth-child(3n) {
+  animation-delay: 130ms;
 }
 
 .card-link {
@@ -243,9 +292,11 @@ small {
 
 .card:hover,
 .card:focus-within {
-  transform: translateY(-3px);
+  transform: translateY(-4px) rotateX(1deg) rotateY(-1deg);
   border-color: color-mix(in srgb, var(--card-accent, var(--accent-1)) 45%, var(--line));
   box-shadow: 0 14px 32px rgb(30 24 12 / 14%);
+  outline: 1px solid color-mix(in srgb, var(--card-accent, var(--accent-1)) 35%, transparent);
+  outline-offset: 1px;
 }
 
 .card:hover::after,
@@ -370,6 +421,21 @@ small {
   border-radius: var(--radius-sm);
   padding: 0.6rem var(--space-md);
   font-weight: 600;
+  border: 1px solid transparent;
+  transition:
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    filter var(--duration-fast) var(--ease-standard);
+}
+
+.button:hover,
+.button:focus-visible {
+  box-shadow: 0 8px 20px rgb(15 23 42 / 18%);
+}
+
+.button:active {
+  transform: translateY(1px) scale(0.985);
+  filter: brightness(0.96);
 }
 
 .button.secondary {
@@ -420,8 +486,78 @@ pre {
   border: 1px solid var(--line);
 }
 
+.reveal-load {
+  opacity: 0;
+  transform: translateY(0.85rem);
+  animation: reveal-load var(--duration-reveal) var(--ease-emphatic) forwards;
+}
+
+.reveal-load--headline {
+  animation-delay: 60ms;
+}
+
+.reveal-load--subcopy {
+  animation-delay: 160ms;
+}
+
+.reveal-load--cta {
+  animation-delay: 260ms;
+}
+
+@keyframes reveal-load {
+  from {
+    opacity: 0;
+    transform: translateY(0.85rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 800px) {
   .split {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-load,
+  .card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .card:hover,
+  .card:focus-within,
+  .button:active {
+    transform: none;
+  }
+
+  .nav-link::after {
+    transition: none;
   }
 }

@@ -15,7 +15,11 @@ const navItems = [
     <ul>
       {navItems.map((item) => (
         <li>
-          <a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>
+          <a
+            class="nav-link"
+            href={item.href}
+            aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+          >
             {item.label}
           </a>
         </li>
