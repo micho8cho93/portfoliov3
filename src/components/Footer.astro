@@ -1,6 +1,45 @@
+---
+const teachingFocusAreas = [
+  "Web development foundations",
+  "AP CSP + AP CSA support",
+  "Project-based learning pathways",
+];
+
+const featuredNow =
+  "Now: Building short, classroom-ready coding labs that blend JavaScript fundamentals with creative projects.";
+---
+
 <footer class="site-footer">
-  <div class="container">
+  <div class="container footer-grid">
+    <div class="footer-column">
+      <h2 class="footer-heading">Quick links</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/courses">Courses</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/projects">Projects</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h2 class="footer-heading">Teaching focus areas</h2>
+      <ul>
+        {teachingFocusAreas.map((area) => <li>{area}</li>)}
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h2 class="footer-heading">Contact & social</h2>
+      <ul>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+        <li><a href="/sitemap-index.xml">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="footer-now"><strong>Featured now:</strong> {featuredNow}</p>
     <p>© {new Date().getFullYear()} CS Educator. Built with Astro.</p>
-    <p><a href="/rss.xml">RSS</a> · <a href="/sitemap-index.xml">Sitemap</a></p>
   </div>
 </footer>
