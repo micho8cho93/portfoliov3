@@ -1,0 +1,73 @@
+---
+courseId: intro-to-python
+moduleId: "03"
+moduleTitle: Functions
+title: Functions
+description: Encapsulate logic into reusable functions with parameters and return values.
+order: 3
+estimatedMinutes: 55
+objectives:
+  - Define and call functions with clear names.
+  - Pass arguments and return computed values.
+  - Refactor repeated code into reusable helpers.
+tryIts:
+  - title: Build a greeting function
+    prompt: Write a function that greets any user by name.
+    starterCode: |
+      def greet(name):
+          return f"Hello, {name}!"
+
+      print(greet("Jordan"))
+    expectedOutput: |
+      Hello, Jordan!
+    tags:
+      - functions
+
+breakIts:
+  - title: Missing function argument
+    prompt: Run this and identify why Python complains.
+    starterCode: |
+      def area(width, height):
+          return width * height
+
+      print(area(4))
+    expectedOutput: |
+      TypeError: area() missing 1 required positional argument: 'height'
+    tags:
+      - arguments
+
+fixIts:
+  - title: Return instead of print
+    prompt: Repair the function so the caller can reuse the result.
+    starterCode: |
+      def square(value):
+          print(value * value)
+
+      result = square(6)
+      print("Result + 4:", result + 4)
+    solutionCode: |
+      def square(value):
+          return value * value
+
+      result = square(6)
+      print("Result + 4:", result + 4)
+    expectedOutput: |
+      Result + 4: 40
+    tags:
+      - return-values
+
+checks:
+  - label: Code check
+    type: code
+    criteria: "Write `def is_even(n):` that returns `True` for even numbers."
+  - label: Concept check
+    type: concept
+    criteria: Explain the difference between printing a value and returning a value.
+updatedDate: 2026-02-11
+---
+
+This lesson focuses on reusable function design.
+
+<SlideDeck src="/resources/intro-to-python/3_Functions.pptx" title="Functions slide deck" />
+
+Use functions whenever you notice repeated logic or want cleaner, testable code.

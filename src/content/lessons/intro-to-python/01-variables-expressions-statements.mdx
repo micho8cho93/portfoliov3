@@ -1,0 +1,211 @@
+---
+courseId: intro-to-python
+moduleId: "01"
+moduleTitle: Variables, Expressions, and Statements
+title: Variables, Expressions, and Statements
+description: Learn how Python stores values, evaluates expressions, and reads user input.
+order: 1
+estimatedMinutes: 55
+objectives:
+  - Distinguish constants from variables and update values predictably.
+  - Evaluate arithmetic expressions using operator precedence.
+  - Convert user input into numeric data with `int()` and `float()`.
+  - Write clear statements that combine input, processing, and output.
+tryIts:
+  - title: Track a running score
+    prompt: Create and update variables that represent a player's score after a bonus round.
+    starterCode: |
+      score = 10
+      print("Starting score:", score)
+
+      bonus_points = 7
+      score = score + bonus_points
+
+      print("Updated score:", score)
+    expectedOutput: |
+      Starting score: 10
+      Updated score: 17
+    tags:
+      - variables
+      - assignment
+
+  - title: Predict expression results
+    prompt: Run the code and explain why each expression produces its value.
+    starterCode: |
+      a = 8 + 2 * 3
+      b = (8 + 2) * 3
+      c = 20 / 5 + 4
+
+      print("a =", a)
+      print("b =", b)
+      print("c =", c)
+    expectedOutput: |
+      a = 14
+      b = 30
+      c = 8.0
+    hints:
+      - Multiplication and division happen before addition and subtraction.
+      - Parentheses change the order of operations.
+    tags:
+      - expressions
+      - precedence
+
+  - title: Convert input into numbers
+    prompt: Ask the user for hours studied and print double that value as a number.
+    starterCode: |
+      hours = input("How many hours did you study? ")
+      doubled = int(hours) * 2
+      print("Double your study hours:", doubled)
+    expectedOutput: |
+      Example input: 6
+      Double your study hours: 12
+    tags:
+      - input
+      - type-conversion
+
+breakIts:
+  - title: String + integer crash
+    prompt: Run this code and identify why Python raises an error.
+    starterCode: |
+      age = input("Enter your age: ")
+      next_year = age + 1
+      print("Next year you will be", next_year)
+    expectedOutput: |
+      TypeError: can only concatenate str (not "int") to str
+    hints:
+      - "`input()` always returns text."
+      - Convert `age` before adding 1.
+    tags:
+      - input
+      - typeerror
+
+  - title: Case-sensitive variable names
+    prompt: Run the code and explain what Python cannot find.
+    starterCode: |
+      total_score = 42
+      print(Total_score)
+    expectedOutput: |
+      NameError: name 'Total_score' is not defined
+    tags:
+      - variables
+      - debugging
+
+fixIts:
+  - title: Repair a checkout total
+    prompt: Fix the code so it adds tax correctly and prints a numeric total.
+    starterCode: |
+      subtotal = input("Subtotal: ")
+      tax_rate = 0.08
+      total = subtotal + subtotal * tax_rate
+
+      print("Total:", total)
+    solutionCode: |
+      subtotal = float(input("Subtotal: "))
+      tax_rate = 0.08
+      total = subtotal + subtotal * tax_rate
+
+      print("Total:", round(total, 2))
+    expectedOutput: |
+      Example input: 50
+      Total: 54.0
+    hints:
+      - "`subtotal` must be numeric before multiplication."
+      - "`float()` is a good choice for prices."
+    tags:
+      - type-conversion
+      - arithmetic
+
+  - title: Fix precedence in a weighted score
+    prompt: Repair the formula so quiz counts as 40% and project counts as 60%.
+    starterCode: |
+      quiz = 70
+      project = 90
+
+      weighted_score = quiz + project / 2
+      print("Weighted score:", weighted_score)
+    solutionCode: |
+      quiz = 70
+      project = 90
+
+      weighted_score = quiz * 0.4 + project * 0.6
+      print("Weighted score:", weighted_score)
+    expectedOutput: |
+      Weighted score: 82.0
+    tags:
+      - expressions
+      - precedence
+
+checks:
+  - label: Explain input type
+    type: concept
+    criteria: Describe why `input()` returns a string and when `int()` or `float()` is needed.
+  - label: Predict output
+    type: output
+    criteria: Predict the output of `print(2 + 3 * 4)` and `print((2 + 3) * 4)`.
+  - label: Repair statement
+    type: code
+    criteria: "Correct `count = \"5\"` so this works without error: `print(count + 2)`."
+  - label: Write one expression
+    type: code
+    criteria: Write a single expression that computes a 15% tip from `bill = 32.5`.
+updatedDate: 2026-02-11
+---
+
+This module focuses on how Python evaluates simple programs.
+
+<SlideDeck
+  src="/resources/intro-to-python/1_Variables, Expressions, and Statements.pptx"
+  title="Variables, Expressions, and Statements slide deck"
+/>
+
+## Constants vs Variables
+
+A variable points to a value that can change while your program runs.
+
+A constant is a value you decide not to change on purpose (Python does not enforce constants, but naming conventions help).
+
+```python
+MAX_ATTEMPTS = 3
+current_attempt = 1
+```
+
+Use clear names so each statement reads like a sentence.
+
+## Expressions and Operator Precedence
+
+An expression combines values and operators to produce a result.
+
+Python evaluates operators in a standard order (for example, `*` before `+`) unless parentheses override it.
+
+```python
+print(8 + 2 * 3)      # 14
+print((8 + 2) * 3)    # 30
+```
+
+## Type Conversion
+
+`input()` returns text, even when the user types digits. Convert data before arithmetic:
+
+```python
+minutes = int(input("Minutes studied: "))
+print(minutes + 10)
+```
+
+Use `int()` for whole numbers and `float()` for decimals.
+
+## Using `input()` in a Full Statement Flow
+
+A common beginner pattern is:
+
+1. Read input
+2. Convert type
+3. Compute result
+4. Print result
+
+```python
+name = input("Name: ")
+score = float(input("Quiz score: "))
+print(name, "earned", score)
+```
+
+Follow that pattern and debugging becomes much easier.

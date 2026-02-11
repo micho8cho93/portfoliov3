@@ -3,6 +3,10 @@ import { getCollection, render } from 'astro:content';
 import CourseLayout from '../../../../components/course/CourseLayout.astro';
 import Callout from '../../../../components/course/Callout.astro';
 import Hint from '../../../../components/course/Hint.astro';
+import SlideDeck from '../../../../components/course/SlideDeck.astro';
+import TryIt from '../../../../components/course/TryIt.astro';
+import BreakIt from '../../../../components/course/BreakIt.astro';
+import FixIt from '../../../../components/course/FixIt.astro';
 
 
 
@@ -38,6 +42,10 @@ const lessonSlug = (entrySlug: string) => {
 
 const { course, lesson } = Astro.props;
 const currentLessonSlug = lessonSlug(lesson.slug);
+const tryIts = lesson.data.tryIts ?? [];
+const breakIts = lesson.data.breakIts ?? [];
+const fixIts = lesson.data.fixIts ?? [];
+const checks = lesson.data.checks ?? [];
 const lessonEntries = await getCollection('lessons', ({ data }) => !data.draft && data.courseId === course.data.courseId);
 const orderedLessons = [...lessonEntries].sort((a, b) => a.data.order - b.data.order);
 
@@ -92,7 +100,78 @@ const { Content, headings } = await render(lesson);
     <p class="meta">{lesson.data.estimatedMinutes} minutes · {lesson.data.objectives.length} learning objectives</p>
   </header>
 
-  <Content components={{ Callout, Hint }} />
+  <section aria-labelledby="objectives-heading" class="lesson-section">
+    <h2 id="objectives-heading">Objectives</h2>
+    <ul>
+      {lesson.data.objectives.map((objective) => (
+        <li>{objective}</li>
+      ))}
+    </ul>
+  </section>
+
+  <section aria-labelledby="core-content-heading" class="lesson-section">
+    <h2 id="core-content-heading">Core Content</h2>
+    <Content components={{ Callout, Hint, SlideDeck }} />
+  </section>
+
+  <details aria-labelledby="try-it-heading" class="lesson-section lesson-collapsible">
+    <summary class="collapsible-summary">
+      <span class="collapse-arrow" aria-hidden="true"></span>
+      <span id="try-it-heading" class="collapsible-title" role="heading" aria-level="2">Try It</span>
+    </summary>
+    <div class="collapsible-panel">
+      {tryIts.length > 0 ? (
+        tryIts.map((item, index) => <TryIt item={item} index={index + 1} />)
+      ) : (
+        <p>No Try It prompts for this lesson yet.</p>
+      )}
+    </div>
+  </details>
+
+  <details aria-labelledby="break-it-heading" class="lesson-section lesson-collapsible">
+    <summary class="collapsible-summary">
+      <span class="collapse-arrow" aria-hidden="true"></span>
+      <span id="break-it-heading" class="collapsible-title" role="heading" aria-level="2">Break It</span>
+    </summary>
+    <div class="collapsible-panel">
+      {breakIts.length > 0 ? (
+        breakIts.map((item, index) => <BreakIt item={item} index={index + 1} />)
+      ) : (
+        <p>No Break It examples for this lesson yet.</p>
+      )}
+    </div>
+  </details>
+
+  <details aria-labelledby="fix-it-heading" class="lesson-section lesson-collapsible">
+    <summary class="collapsible-summary">
+      <span class="collapse-arrow" aria-hidden="true"></span>
+      <span id="fix-it-heading" class="collapsible-title" role="heading" aria-level="2">Fix It</span>
+    </summary>
+    <div class="collapsible-panel">
+      {fixIts.length > 0 ? (
+        fixIts.map((item, index) => <FixIt item={item} index={index + 1} />)
+      ) : (
+        <p>No Fix It challenges for this lesson yet.</p>
+      )}
+    </div>
+  </details>
+
+  <section aria-labelledby="quick-check-heading" class="lesson-section">
+    <h2 id="quick-check-heading">Quick Check</h2>
+    {checks.length > 0 ? (
+      <ol class="checks-list">
+        {checks.map((check) => (
+          <li class="check-card">
+            <h3>{check.label}</h3>
+            <p class="check-type">{check.type}</p>
+            <p>{check.criteria}</p>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p>No quick checks for this lesson yet.</p>
+    )}
+  </section>
 </CourseLayout>
 
 <style>
@@ -112,6 +191,91 @@ const { Content, headings } = await render(lesson);
 
   .meta {
     color: var(--ink-muted);
+  }
+
+  .lesson-section {
+    margin-top: var(--space-lg);
+  }
+
+  .lesson-collapsible {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    overflow: hidden;
+  }
+
+  .collapsible-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    user-select: none;
+    background: color-mix(in srgb, var(--accent-2) 7%, var(--bg-elevated));
+  }
+
+  .collapsible-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible-summary::marker {
+    content: '';
+  }
+
+  .collapsible-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    color: var(--ink-primary);
+  }
+
+  .collapse-arrow {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-right: 2px solid var(--ink-muted);
+    border-bottom: 2px solid var(--ink-muted);
+    transform: rotate(-45deg);
+    transition: transform var(--duration-base) var(--ease-standard);
+    margin-top: -2px;
+    flex-shrink: 0;
+  }
+
+  .lesson-collapsible[open] .collapse-arrow {
+    transform: rotate(45deg);
+  }
+
+  .collapsible-panel {
+    border-top: 1px solid var(--line);
+    padding: 0 var(--space-md) var(--space-md);
+  }
+
+  .checks-list {
+    padding-left: 1.2rem;
+    margin-bottom: 0;
+  }
+
+  .check-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+  }
+
+  .check-card + .check-card {
+    margin-top: var(--space-sm);
+  }
+
+  .check-type {
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    font-weight: 600;
   }
 
   :global(html) {

@@ -1,0 +1,79 @@
+---
+courseId: intro-to-python
+moduleId: "04"
+moduleTitle: Loops and Iterations
+title: Loops and Iterations
+description: Repeat actions efficiently with `for` and `while` loops.
+order: 4
+estimatedMinutes: 55
+objectives:
+  - Use `for` loops to iterate over ranges and collections.
+  - Use `while` loops for condition-driven repetition.
+  - Prevent infinite loops by updating loop state correctly.
+tryIts:
+  - title: Print counting pattern
+    prompt: Count from 1 to 5 with a for loop.
+    starterCode: |
+      for n in range(1, 6):
+          print(n)
+    expectedOutput: |
+      1
+      2
+      3
+      4
+      5
+    tags:
+      - for-loop
+
+breakIts:
+  - title: Infinite while loop
+    prompt: Spot why this loop never finishes.
+    starterCode: |
+      count = 0
+
+      while count < 3:
+          print("count is", count)
+    expectedOutput: |
+      Loop never ends because count is never updated.
+    tags:
+      - while-loop
+      - debugging
+
+fixIts:
+  - title: Fix loop update
+    prompt: Repair this loop so it prints 0, 1, and 2 exactly once.
+    starterCode: |
+      count = 0
+
+      while count < 3:
+          print(count)
+    solutionCode: |
+      count = 0
+
+      while count < 3:
+          print(count)
+          count += 1
+    expectedOutput: |
+      0
+      1
+      2
+    hints:
+      - Update the loop variable inside the loop body.
+    tags:
+      - while-loop
+
+checks:
+  - label: Output check
+    type: output
+    criteria: "Predict output of `for i in range(2, 7, 2): print(i)`."
+  - label: Concept check
+    type: concept
+    criteria: Describe one case where `while` is better than `for`.
+updatedDate: 2026-02-11
+---
+
+This lesson focuses on safe, predictable looping.
+
+<SlideDeck src="/resources/intro-to-python/4_Loops and Iterations.pptx" title="Loops and Iterations slide deck" />
+
+After each loop you write, test at least one edge case (like empty input or one-item input).

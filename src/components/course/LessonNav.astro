@@ -1,0 +1,57 @@
+---
+import { withBase } from '../../utils/withBase';
+import { lessonRoute } from '../../lib/routes';
+
+interface PagerLesson {
+  slug: string;
+  title: string;
+}
+
+interface Props {
+  courseSlug: string;
+  prevLesson?: PagerLesson;
+  nextLesson?: PagerLesson;
+}
+
+const { courseSlug, prevLesson, nextLesson } = Astro.props;
+---
+
+<nav class="lesson-nav" aria-label="Lesson navigation">
+  <div class="lesson-nav-item">
+    {prevLesson && (
+      <a class="button secondary" href={withBase(lessonRoute(courseSlug, prevLesson.slug))}>
+        ← Previous: {prevLesson.title}
+      </a>
+    )}
+  </div>
+  <div class="lesson-nav-item lesson-nav-item-next">
+    {nextLesson && (
+      <a class="button" href={withBase(lessonRoute(courseSlug, nextLesson.slug))}>
+        Next: {nextLesson.title} →
+      </a>
+    )}
+  </div>
+</nav>
+
+<style>
+  .lesson-nav {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+  }
+
+  .lesson-nav-item-next {
+    text-align: right;
+  }
+
+  @media (max-width: 42rem) {
+    .lesson-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .lesson-nav-item-next {
+      text-align: left;
+    }
+  }
+</style>

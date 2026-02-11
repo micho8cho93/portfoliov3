@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../../components/Layout.astro';
+import { withBase } from '../../../../utils/withBase';
+import { courseRoute } from '../../../../lib/routes';
+
+export async function getStaticPaths() {
+  const toCapstoneSlug = (entrySlug: string) => {
+    const parts = entrySlug.split('/').filter(Boolean);
+    return parts.at(-1) ?? entrySlug;
+  };
+
+  const courseEntries = await getCollection('courses');
+  const capstoneEntries = await getCollection('capstones', ({ data }) => !data.draft);
+
+  const courseById = new Map(courseEntries.map((course) => [course.data.courseId, course]));
+
+  return capstoneEntries
+    .map((capstone) => {
+      const course = courseById.get(capstone.data.courseId);
+      if (!course) {
+        return null;
+      }
+
+      return {
+        params: { course: course.slug, capstone: toCapstoneSlug(capstone.slug) },
+        props: { course, capstone }
+      };
+    })
+    .filter(Boolean);
+}
+
+const { course, capstone } = Astro.props;
+const { Content } = await render(capstone);
+---
+
+<Layout title={`${capstone.data.title} | ${course.data.title}`} description={capstone.data.description}>
+  <p><a href={withBase(courseRoute(course.slug))}>← Back to course</a></p>
+
+  <article class="capstone-page">
+    <p class="eyebrow">Capstone Project</p>
+    <h1>{capstone.data.title}</h1>
+    <p>{capstone.data.description}</p>
+    <p class="meta">Estimated effort: {capstone.data.estimatedHours} hours</p>
+
+    <section>
+      <h2>Overview</h2>
+      <Content />
+    </section>
+
+    {capstone.data.prerequisites.length > 0 && (
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          {capstone.data.prerequisites.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2>Milestones</h2>
+      <ol>
+        {capstone.data.milestones.map((milestone) => (
+          <li>{milestone}</li>
+        ))}
+      </ol>
+    </section>
+
+    <section>
+      <h2>Rubric</h2>
+      <ul>
+        {capstone.data.rubric.map((criterion) => (
+          <li>{criterion}</li>
+        ))}
+      </ul>
+    </section>
+
+    {capstone.data.starterRepoUrl && (
+      <section>
+        <h2>Starter Repo</h2>
+        <p>
+          <a class="button secondary" href={capstone.data.starterRepoUrl} target="_blank" rel="noreferrer">
+            Open starter repository
+          </a>
+        </p>
+      </section>
+    )}
+
+    <section>
+      <h2>Submission Checklist</h2>
+      <ul>
+        {capstone.data.submissionChecklist.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .capstone-page {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-lg);
+  }
+
+  .meta {
+    color: var(--ink-muted);
+  }
+
+  .capstone-page section + section {
+    margin-top: var(--space-lg);
+  }
+</style>

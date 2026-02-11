@@ -1,0 +1,116 @@
+---
+import PythonPlayground from './PythonPlayground.astro';
+
+interface LessonExercise {
+  title: string;
+  prompt: string;
+  starterCode: string;
+  solutionCode?: string;
+  expectedOutput?: string;
+  hints?: string[];
+  tags?: string[];
+}
+
+interface Props {
+  item: LessonExercise;
+  index: number;
+}
+
+const { item, index } = Astro.props;
+---
+
+<article class="exercise-card break-it" aria-labelledby={`break-it-${index}`}>
+  <p class="exercise-eyebrow">Break It {index}</p>
+  <h3 id={`break-it-${index}`}>{item.title}</h3>
+  <p>{item.prompt}</p>
+
+  {item.tags && item.tags.length > 0 && (
+    <ul class="tag-list" aria-label="Tags">
+      {item.tags.map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  )}
+
+  <PythonPlayground code={item.starterCode} label="Buggy code" outputLabel="Run result" />
+
+  {item.expectedOutput && (
+    <div class="result-block">
+      <h4>What goes wrong</h4>
+      <pre><code>{item.expectedOutput}</code></pre>
+    </div>
+  )}
+
+  {item.hints && item.hints.length > 0 && (
+    <details class="exercise-details">
+      <summary>Hints for debugging</summary>
+      <ul>
+        {item.hints.map((hint) => (
+          <li>{hint}</li>
+        ))}
+      </ul>
+    </details>
+  )}
+
+  {item.solutionCode && (
+    <details class="exercise-details">
+      <summary>Show corrected version</summary>
+      <PythonPlayground code={item.solutionCode} label="Corrected code" outputLabel="Corrected output" />
+    </details>
+  )}
+</article>
+
+<style>
+  .exercise-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+  }
+
+  .break-it {
+    border-left: 4px solid #b45309;
+  }
+
+  .exercise-eyebrow {
+    margin: 0 0 var(--space-xs);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .result-block {
+    margin-top: var(--space-md);
+  }
+
+  .result-block h4 {
+    margin-bottom: var(--space-xs);
+    font-size: 0.95rem;
+  }
+
+  .result-block pre {
+    margin: 0;
+    padding: var(--space-sm);
+    background: color-mix(in srgb, #b45309 10%, var(--bg-elevated));
+  }
+
+  .exercise-details {
+    margin-top: var(--space-sm);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    background: color-mix(in srgb, #b45309 7%, var(--bg-elevated));
+  }
+
+  .exercise-details summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .exercise-details ul {
+    margin: var(--space-sm) 0 0;
+  }
+</style>

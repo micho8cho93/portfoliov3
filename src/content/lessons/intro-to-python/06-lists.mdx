@@ -1,0 +1,75 @@
+---
+courseId: intro-to-python
+moduleId: "06"
+moduleTitle: Lists
+title: Lists
+description: Store and process collections with list operations and iteration.
+order: 6
+estimatedMinutes: 55
+objectives:
+  - Create and update Python lists.
+  - Iterate through list items with loops.
+  - Use list methods for adding, removing, and measuring items.
+tryIts:
+  - title: Add and print list items
+    prompt: Build a list of tasks and print each task.
+    starterCode: |
+      tasks = ["study", "practice", "review"]
+      tasks.append("quiz")
+
+      for task in tasks:
+          print(task)
+    expectedOutput: |
+      study
+      practice
+      review
+      quiz
+    tags:
+      - lists
+      - loops
+
+breakIts:
+  - title: Wrong list index
+    prompt: Run this and identify why item assignment fails.
+    starterCode: |
+      scores = [85, 90, 78]
+      scores[3] = 92
+      print(scores)
+    expectedOutput: |
+      IndexError: list assignment index out of range
+    tags:
+      - indexing
+
+fixIts:
+  - title: Fix average calculation
+    prompt: Repair the code so it computes the average score.
+    starterCode: |
+      scores = [80, 90, 100]
+      average = sum(scores)
+      print("Average:", average)
+    solutionCode: |
+      scores = [80, 90, 100]
+      average = sum(scores) / len(scores)
+      print("Average:", average)
+    expectedOutput: |
+      Average: 90.0
+    hints:
+      - Use both `sum()` and `len()`.
+    tags:
+      - aggregation
+
+checks:
+  - label: Output check
+    type: output
+    criteria: Predict output of `items = [1,2]; items.append(3); print(len(items))`.
+  - label: Code check
+    type: code
+    criteria: Write a loop that prints each name from `names = ["Ana", "Bo", "Chi"]`.
+updatedDate: 2026-02-11
+---
+
+This lesson focuses on collection processing with lists.
+
+<SlideDeck src="/resources/intro-to-python/6_Lists.pptx" title="Lists slide deck" />
+
+Lists are the bridge to capstone work because they let students manage multi-item data sets.

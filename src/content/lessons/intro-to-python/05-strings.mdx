@@ -1,0 +1,72 @@
+---
+courseId: intro-to-python
+moduleId: "05"
+moduleTitle: Strings
+title: Strings
+description: Manipulate text with indexing, slicing, and common string methods.
+order: 5
+estimatedMinutes: 45
+objectives:
+  - Access characters with indexing and slicing.
+  - Transform text using common methods.
+  - Build formatted output strings for user-facing messages.
+tryIts:
+  - title: Slice a username prefix
+    prompt: Print the first three characters of a username.
+    starterCode: |
+      username = "pythonlearner"
+      print(username[:3])
+    expectedOutput: |
+      pyt
+    tags:
+      - slicing
+
+breakIts:
+  - title: Out-of-range index
+    prompt: Run and explain the error.
+    starterCode: |
+      word = "cat"
+      print(word[3])
+    expectedOutput: |
+      IndexError: string index out of range
+    tags:
+      - indexing
+
+fixIts:
+  - title: Fix case-sensitive comparison
+    prompt: Repair this check so 'YES', 'Yes', and 'yes' all pass.
+    starterCode: |
+      answer = input("Continue? ")
+
+      if answer == "yes":
+          print("Starting...")
+      else:
+          print("Stopped")
+    solutionCode: |
+      answer = input("Continue? ").strip().lower()
+
+      if answer == "yes":
+          print("Starting...")
+      else:
+          print("Stopped")
+    expectedOutput: |
+      Example input: YES
+      Starting...
+    tags:
+      - string-methods
+
+checks:
+  - label: Code check
+    type: code
+    criteria: Write code that prints the last character of `word = "rocket"`.
+  - label: Concept check
+    type: concept
+    criteria: Explain the difference between `.strip()` and `.lower()`.
+updatedDate: 2026-02-11
+---
+
+This lesson focuses on making text handling predictable.
+
+<SlideDeck src="/resources/intro-to-python/5_Strings.pptx" title="Strings slide deck" />
+
+Focus on making text handling predictable, especially when input capitalization varies.

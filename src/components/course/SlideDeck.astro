@@ -1,0 +1,170 @@
+---
+import { withBase } from '../../utils/withBase';
+
+interface Props {
+  src: string;
+  title?: string;
+}
+
+const { src, title = 'Lesson slide deck' } = Astro.props;
+const normalizedSrc = src.startsWith('/') ? src : `/${src}`;
+const assetPath = withBase(normalizedSrc);
+---
+
+<figure class="slide-deck" data-slide-deck data-slide-src={assetPath}>
+  <figcaption>
+    <span>Slide deck</span>
+    <a href={assetPath} target="_blank" rel="noopener">Open file</a>
+  </figcaption>
+  <div class="slide-viewer-shell" aria-label={title}>
+    <div class="slide-loading" data-slide-loading>Loading slides...</div>
+    <div class="slide-viewer" data-slide-viewer></div>
+    <p class="slide-error" data-slide-error hidden>Could not load this deck in-browser. Use Open file to view it.</p>
+  </div>
+  <p class="slide-note">Slides are rendered directly in your browser. If loading fails, use Open file.</p>
+</figure>
+
+<script>
+  import { PPTXViewer } from 'pptx-viewer';
+
+  if (!window.__courseSlideDeckBound) {
+    window.__courseSlideDeckBound = true;
+
+    const attachDeck = async (deck: Element) => {
+      if (!(deck instanceof HTMLElement) || deck.dataset.ready === 'true') {
+        return;
+      }
+
+      const container = deck.querySelector('[data-slide-viewer]');
+      const loading = deck.querySelector('[data-slide-loading]');
+      const errorMessage = deck.querySelector('[data-slide-error]');
+      const slideSrc = deck.dataset.slideSrc;
+
+      if (
+        !(container instanceof HTMLElement) ||
+        !(loading instanceof HTMLElement) ||
+        !(errorMessage instanceof HTMLElement) ||
+        !slideSrc
+      ) {
+        return;
+      }
+
+      deck.dataset.ready = 'loading';
+
+      try {
+        const viewer = new PPTXViewer(container, {
+          showControls: true,
+          keyboardNavigation: true
+        });
+
+        await viewer.load(slideSrc);
+        loading.hidden = true;
+        errorMessage.hidden = true;
+        deck.dataset.ready = 'true';
+      } catch (error) {
+        loading.hidden = true;
+        errorMessage.hidden = false;
+        errorMessage.textContent =
+          error instanceof Error && error.message
+            ? `Could not load this deck in-browser: ${error.message}`
+            : 'Could not load this deck in-browser. Use Open file to view it.';
+        deck.dataset.ready = 'error';
+      }
+    };
+
+    const attachDecks = () => {
+      document.querySelectorAll('[data-slide-deck]').forEach((deck) => {
+        void attachDeck(deck);
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachDecks, { once: true });
+    } else {
+      attachDecks();
+    }
+  }
+</script>
+
+<style>
+  .slide-deck {
+    margin: var(--space-md) 0 var(--space-lg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    overflow: hidden;
+  }
+
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--accent-2) 8%, var(--bg-elevated));
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  figcaption a {
+    font-weight: 500;
+  }
+
+  .slide-viewer-shell {
+    aspect-ratio: 16 / 9;
+    min-height: 20rem;
+    background: color-mix(in srgb, var(--ink-primary) 4%, var(--bg-elevated));
+    position: relative;
+    display: grid;
+    align-items: stretch;
+  }
+
+  .slide-viewer {
+    height: 100%;
+    min-height: 20rem;
+  }
+
+  .slide-loading,
+  .slide-error {
+    margin: 0;
+    position: absolute;
+    inset: auto var(--space-sm) var(--space-sm);
+    z-index: 1;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--bg-elevated) 90%, transparent);
+    padding: 0.45rem 0.6rem;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  .slide-error {
+    border-color: color-mix(in srgb, #dc2626 35%, var(--line));
+    color: #7f1d1d;
+  }
+
+  .slide-viewer :global(svg) {
+    border: 0;
+  }
+
+  .slide-note {
+    margin: 0;
+    padding: var(--space-xs) var(--space-sm);
+    border-top: 1px solid var(--line);
+    font-size: 0.84rem;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 48rem) {
+    figcaption {
+      flex-wrap: wrap;
+    }
+
+    .slide-viewer-shell,
+    .slide-viewer {
+      min-height: 14rem;
+    }
+  }
+</style>

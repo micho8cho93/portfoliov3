@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import TagList from '../../components/TagList.astro';
 import { withBase } from '../../utils/withBase';
-import { courseRoute, courses, lessonRoute } from '../../lib/routes';
+import { capstoneRoute, courseRoute, courses, lessonRoute } from '../../lib/routes';
 
 export async function getStaticPaths() {
   const courseEntries = await getCollection('courses');
@@ -19,8 +19,18 @@ function lessonSlug(entrySlug: string): string {
   return parts.at(-1) ?? entrySlug;
 }
 
+function capstoneSlug(entrySlug: string): string {
+  const parts = entrySlug.split('/').filter(Boolean);
+  return parts.at(-1) ?? entrySlug;
+}
+
 const allLessons = await getCollection('lessons', ({ data }) => !data.draft && data.courseId === course.data.courseId);
 const orderedLessons = [...allLessons].sort((a, b) => a.data.order - b.data.order);
+const allCapstones = await getCollection('capstones', ({ data }) => !data.draft && data.courseId === course.data.courseId);
+const orderedCapstones = [...allCapstones].sort((a, b) => a.data.order - b.data.order);
+const capstoneEntry = course.data.capstoneSlug
+  ? orderedCapstones.find((entry) => capstoneSlug(entry.slug) === course.data.capstoneSlug)
+  : orderedCapstones[0];
 
 const moduleMap = new Map<string, { moduleId: string; moduleTitle: string; lessons: typeof orderedLessons }>();
 for (const lesson of orderedLessons) {
@@ -62,12 +72,41 @@ const firstLesson = orderedLessons[0];
 
       {firstLesson ? (
         <p>
-          <a class="button" href={withBase(lessonRoute(course.slug, lessonSlug(firstLesson.slug)))}>Start Course</a>
+          <a class="button" href={withBase(lessonRoute(course.slug, lessonSlug(firstLesson.slug)))}>Start course</a>
         </p>
       ) : (
         <p>
           <a class="button secondary" href={withBase(courseRoute(course.slug))}>Course Overview</a>
         </p>
+      )}
+
+      <section class="module-links">
+        <h2>Links</h2>
+        <ul>
+          <li>
+            <a href="https://github.com/MrMichel93/Classwork" target="_blank" rel="noreferrer">
+              Classwork Assignments
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/micho8cho93/Python-Course" target="_blank" rel="noreferrer">
+              Follow-Along Projects
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      {capstoneEntry && (
+        <section class="capstone-card">
+          <h2>Capstone Project</h2>
+          <p>{capstoneEntry.data.title}</p>
+          <p>{capstoneEntry.data.description}</p>
+          <p>
+            <a class="button secondary" href={withBase(capstoneRoute(course.slug, capstoneSlug(capstoneEntry.slug)))}>
+              Open capstone
+            </a>
+          </p>
+        </section>
       )}
 
       {modules.length > 0 && (
@@ -131,6 +170,18 @@ const firstLesson = orderedLessons[0];
   }
 
   .module-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+  }
+
+  .module-links ul {
+    margin-bottom: 0;
+  }
+
+  .capstone-card {
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--bg-elevated);

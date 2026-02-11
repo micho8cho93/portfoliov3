@@ -1,0 +1,55 @@
+---
+courseId: intro-to-python
+title: Mini Student Gradebook CLI
+description: Build a multi-file Python command-line app that collects grades, computes summaries, and prints student reports.
+order: 1
+estimatedHours: 4
+prerequisites:
+  - Variables and type conversion
+  - Conditionals and loops
+  - Functions
+  - Strings and lists
+milestones:
+  - Plan the data model for students, assignments, and scores.
+  - Implement input and validation flow for adding student records.
+  - Build grade calculations (average, letter grade, pass/fail).
+  - Add reporting commands for single-student and all-student views.
+  - Test edge cases and polish output formatting.
+rubric:
+  - "Correctness: calculations and branching are accurate for normal and edge inputs."
+  - "Code quality: logic is split into functions with clear naming."
+  - "User experience: prompts and output are understandable."
+  - "Robustness: invalid input is handled without crashing."
+  - "Completion: all required milestones are implemented."
+starterRepoUrl: https://github.com/micho8cho93/Python-Course
+submissionChecklist:
+  - Include README with run instructions.
+  - Include at least five realistic test cases with expected results.
+  - Demonstrate input validation for non-numeric scores.
+  - Provide final output screenshot or sample terminal transcript.
+  - Submit repository link with latest commit.
+updatedDate: 2026-02-11
+---
+
+Use this capstone to combine all six modules into one practical program.
+
+## Project Brief
+
+Create a command-line gradebook where a teacher can:
+
+- Add student names
+- Enter multiple assignment scores
+- Print averages and letter grades
+- View a final class summary
+
+## Technical Requirements
+
+Use functions for each major action, loops for menus, conditionals for grading rules, and lists for storing score data.
+
+## Suggested Structure
+
+- `main.py` for menu flow
+- `gradebook.py` for data logic
+- `reporting.py` for summary output
+
+Keep the first version simple, then iterate.

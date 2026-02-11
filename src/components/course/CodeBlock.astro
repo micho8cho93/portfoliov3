@@ -1,0 +1,121 @@
+---
+interface Props {
+  code: string;
+  language?: string;
+  label?: string;
+  copyLabel?: string;
+  id?: string;
+}
+
+const { code, language = 'python', label, copyLabel = 'Copy code', id } = Astro.props;
+const codeId = id ?? `course-code-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<div class="code-block">
+  <div class="code-block-header">
+    {label ? <p class="code-label">{label}</p> : <span aria-hidden="true" />}
+    <button
+      type="button"
+      class="copy-button"
+      aria-label={copyLabel}
+      data-copy-target={codeId}
+      data-default-label="Copy"
+    >
+      Copy
+    </button>
+  </div>
+  <pre id={codeId}><code class={`language-${language}`}>{code}</code></pre>
+</div>
+
+<script is:inline>
+  if (!window.__courseCopyCodeBound) {
+    window.__courseCopyCodeBound = true;
+
+    const copyWithFallback = (text) => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    };
+
+    document.addEventListener('click', async (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const button = target.closest('[data-copy-target]');
+      if (!(button instanceof HTMLButtonElement)) return;
+
+      const targetId = button.getAttribute('data-copy-target');
+      if (!targetId) return;
+
+      const codeElement = document.getElementById(targetId);
+      const textToCopy = codeElement?.textContent ?? '';
+      if (!textToCopy.trim()) return;
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(textToCopy);
+        } else {
+          copyWithFallback(textToCopy);
+        }
+
+        const defaultLabel = button.dataset.defaultLabel ?? 'Copy';
+        button.textContent = 'Copied';
+        window.setTimeout(() => {
+          button.textContent = defaultLabel;
+        }, 1400);
+      } catch {
+        copyWithFallback(textToCopy);
+      }
+    });
+  }
+</script>
+
+<style>
+  .code-block {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-elevated);
+  }
+
+  .code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--accent-2) 6%, var(--bg-elevated));
+  }
+
+  .code-label {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .copy-button {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    color: var(--ink-primary);
+    padding: 0.25rem 0.6rem;
+    font: inherit;
+    font-size: 0.84rem;
+    cursor: pointer;
+  }
+
+  pre {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ink-primary) 2%, var(--bg-elevated));
+  }
+</style>

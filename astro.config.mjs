@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
@@ -39,7 +40,7 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [mdx(), sitemap()],
   markdown: {
     syntaxHighlight: 'shiki'
   }

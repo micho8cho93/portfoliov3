@@ -1,0 +1,337 @@
+---
+interface Props {
+  code: string;
+  label?: string;
+  outputLabel?: string;
+  runLabel?: string;
+  resetLabel?: string;
+  id?: string;
+}
+
+const {
+  code,
+  label = 'Code editor',
+  outputLabel = 'Output',
+  runLabel = 'Run',
+  resetLabel = 'Reset',
+  id
+} = Astro.props;
+
+const editorId = id ?? `python-editor-${Math.random().toString(36).slice(2, 10)}`;
+const rowCount = Math.max(6, Math.min(18, code.split('\n').length + 1));
+---
+
+<div class="python-playground" data-python-playground>
+  <div class="playground-header">
+    <p class="playground-label">{label}</p>
+    <p class="playground-runtime">Python (browser runtime)</p>
+  </div>
+
+  <textarea
+    id={editorId}
+    class="playground-editor"
+    data-editor
+    spellcheck="false"
+    rows={rowCount}
+  >{code}</textarea>
+
+  <div class="playground-controls">
+    <button type="button" class="playground-button" data-run>{runLabel}</button>
+    <button type="button" class="playground-button ghost" data-reset>{resetLabel}</button>
+    <p class="playground-status" data-status aria-live="polite"></p>
+  </div>
+
+  <div class="playground-output-shell">
+    <p class="playground-output-label">{outputLabel}</p>
+    <pre class="playground-output" data-output>Run the code to see output here.</pre>
+  </div>
+</div>
+
+<script is:inline>
+  if (!window.__pythonPlaygroundBound) {
+    window.__pythonPlaygroundBound = true;
+    const pyodideVersion = '0.26.4';
+    const pyodideScript = `https://cdn.jsdelivr.net/pyodide/v${pyodideVersion}/full/pyodide.js`;
+    let pyodidePromise;
+
+    const loadScript = () =>
+      new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${pyodideScript}"]`);
+        if (existing) {
+          if (window.loadPyodide) {
+            resolve();
+            return;
+          }
+
+          existing.addEventListener('load', () => resolve(), { once: true });
+          existing.addEventListener('error', () => reject(new Error('Could not load Python runtime.')), { once: true });
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = pyodideScript;
+        script.async = true;
+        script.addEventListener('load', () => resolve(), { once: true });
+        script.addEventListener('error', () => reject(new Error('Could not load Python runtime.')), { once: true });
+        document.head.appendChild(script);
+      });
+
+    const ensurePyodide = async () => {
+      if (window.__coursePyodide) {
+        return window.__coursePyodide;
+      }
+
+      if (!pyodidePromise) {
+        pyodidePromise = (async () => {
+          if (!window.loadPyodide) {
+            await loadScript();
+          }
+
+          const runtime = await window.loadPyodide();
+          window.__coursePyodide = runtime;
+          return runtime;
+        })();
+      }
+
+      return pyodidePromise;
+    };
+
+    const runUserCode = async (runtime, userCode) => {
+      runtime.globals.set('__course_user_code', userCode);
+      const resultProxy = await runtime.runPythonAsync(`
+import builtins
+import contextlib
+import io
+import traceback
+import js
+
+def __browser_input(prompt_text=''):
+    response = js.prompt(str(prompt_text))
+    if response is None:
+        raise EOFError("Input cancelled by user.")
+    return response
+
+stdout_buffer = io.StringIO()
+stderr_buffer = io.StringIO()
+globals_scope = {}
+original_input = builtins.input
+builtins.input = __browser_input
+
+try:
+    with contextlib.redirect_stdout(stdout_buffer), contextlib.redirect_stderr(stderr_buffer):
+        exec(__course_user_code, globals_scope)
+except Exception:
+    traceback.print_exc(file=stderr_buffer)
+finally:
+    builtins.input = original_input
+
+{"stdout": stdout_buffer.getvalue(), "stderr": stderr_buffer.getvalue()}
+      `);
+
+      const result =
+        resultProxy && typeof resultProxy.toJs === 'function'
+          ? resultProxy.toJs({ dict_converter: Object.fromEntries })
+          : resultProxy;
+
+      if (resultProxy && typeof resultProxy.destroy === 'function') {
+        resultProxy.destroy();
+      }
+
+      runtime.globals.delete('__course_user_code');
+      return result;
+    };
+
+    const renderOutput = (outputEl, result) => {
+      const stdout = typeof result?.stdout === 'string' ? result.stdout : '';
+      const stderr = typeof result?.stderr === 'string' ? result.stderr : '';
+      const lines = [];
+
+      if (stdout.trim()) {
+        lines.push(stdout.trimEnd());
+      }
+
+      if (stderr.trim()) {
+        lines.push(stderr.trimEnd());
+      }
+
+      outputEl.textContent = lines.length > 0 ? lines.join('\n') : '(No output)';
+      outputEl.dataset.state = stderr.trim() ? 'error' : 'ok';
+    };
+
+    const bindPlayground = (container) => {
+      if (!(container instanceof HTMLElement) || container.dataset.bound === 'true') {
+        return;
+      }
+
+      const editor = container.querySelector('[data-editor]');
+      const runButton = container.querySelector('[data-run]');
+      const resetButton = container.querySelector('[data-reset]');
+      const status = container.querySelector('[data-status]');
+      const output = container.querySelector('[data-output]');
+
+      if (
+        !(editor instanceof HTMLTextAreaElement) ||
+        !(runButton instanceof HTMLButtonElement) ||
+        !(resetButton instanceof HTMLButtonElement) ||
+        !(status instanceof HTMLElement) ||
+        !(output instanceof HTMLElement)
+      ) {
+        return;
+      }
+
+      container.dataset.bound = 'true';
+      const initialCode = editor.value;
+
+      resetButton.addEventListener('click', () => {
+        editor.value = initialCode;
+        output.textContent = 'Code reset to starter version.';
+        output.dataset.state = 'ok';
+        status.textContent = '';
+      });
+
+      runButton.addEventListener('click', async () => {
+        runButton.disabled = true;
+        status.textContent = 'Loading Python runtime...';
+
+        try {
+          const runtime = await ensurePyodide();
+          status.textContent = 'Running...';
+          const result = await runUserCode(runtime, editor.value);
+          renderOutput(output, result);
+          status.textContent = 'Finished.';
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Execution failed.';
+          output.textContent = message;
+          output.dataset.state = 'error';
+          status.textContent = 'Error.';
+        } finally {
+          runButton.disabled = false;
+        }
+      });
+    };
+
+    const init = () => {
+      document.querySelectorAll('[data-python-playground]').forEach(bindPlayground);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
+  }
+</script>
+
+<style>
+  .python-playground {
+    margin-top: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--ink-primary) 2%, var(--bg-elevated));
+    overflow: hidden;
+  }
+
+  .playground-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--accent-2) 6%, var(--bg-elevated));
+  }
+
+  .playground-label,
+  .playground-runtime,
+  .playground-status,
+  .playground-output-label {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .playground-runtime {
+    font-weight: 500;
+  }
+
+  .playground-editor {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-sm);
+    margin: 0;
+    resize: vertical;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--ink-primary);
+    background: var(--bg-elevated);
+  }
+
+  .playground-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .playground-button {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--accent-1) 18%, var(--bg-elevated));
+    color: var(--ink-primary);
+    padding: 0.28rem 0.72rem;
+    font: inherit;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+
+  .playground-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .playground-button.ghost {
+    background: var(--bg-elevated);
+  }
+
+  .playground-status {
+    margin-left: auto;
+  }
+
+  .playground-output-shell {
+    padding: var(--space-sm);
+  }
+
+  .playground-output {
+    margin: var(--space-xs) 0 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    padding: var(--space-sm);
+    min-height: 4.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .playground-output[data-state='error'] {
+    border-color: color-mix(in srgb, #dc2626 35%, var(--line));
+    background: color-mix(in srgb, #dc2626 6%, var(--bg-elevated));
+    color: #7f1d1d;
+  }
+
+  @media (max-width: 40rem) {
+    .playground-status {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>

@@ -36,6 +36,10 @@ export function lessonRoute(courseSlug: string, lessonSlug: string): string {
   return `${courseRoute(courseSlug)}/lessons/${normalizeSlug(lessonSlug)}`;
 }
 
+export function capstoneRoute(courseSlug: string, capstoneSlug: string): string {
+  return `${courseRoute(courseSlug)}/capstone/${normalizeSlug(capstoneSlug)}`;
+}
+
 export function course(slug: string): string {
   return courseRoute(slug);
 }

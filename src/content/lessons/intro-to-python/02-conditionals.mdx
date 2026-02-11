@@ -1,0 +1,84 @@
+---
+courseId: intro-to-python
+moduleId: "02"
+moduleTitle: Conditionals
+title: Conditionals
+description: Make decisions in Python with boolean expressions, if/elif/else, and comparison operators.
+order: 2
+estimatedMinutes: 50
+objectives:
+  - Evaluate boolean expressions with comparison operators.
+  - Choose between `if`, `elif`, and `else` branches.
+  - Write decision logic that is readable and testable.
+tryIts:
+  - title: Letter grade branch
+    prompt: Print a letter grade based on a numeric score.
+    starterCode: |
+      score = 84
+
+      if score >= 90:
+          print("A")
+      elif score >= 80:
+          print("B")
+      else:
+          print("Needs improvement")
+    expectedOutput: |
+      B
+    tags:
+      - if-elif-else
+
+breakIts:
+  - title: Incorrect comparison type
+    prompt: Run this and identify why comparison logic fails for some inputs.
+    starterCode: |
+      age = input("Age: ")
+
+      if age >= 18:
+          print("Adult")
+      else:
+          print("Minor")
+    expectedOutput: |
+      TypeError: '>=' not supported between instances of 'str' and 'int'
+    tags:
+      - debugging
+      - type-conversion
+
+fixIts:
+  - title: Fix pass/fail checker
+    prompt: Repair the condition so scores of 70 and above pass.
+    starterCode: |
+      score = 70
+
+      if score > 70:
+          print("Pass")
+      else:
+          print("Fail")
+    solutionCode: |
+      score = 70
+
+      if score >= 70:
+          print("Pass")
+      else:
+          print("Fail")
+    expectedOutput: |
+      Pass
+    hints:
+      - Check the boundary condition for exactly 70.
+    tags:
+      - boundary-cases
+
+checks:
+  - label: Concept check
+    type: concept
+    criteria: Explain when to use `elif` instead of nesting many `if` statements.
+  - label: Output check
+    type: output
+    criteria: "Predict output when `temp = 72` in `if temp > 75: print(\"Hot\") else: print(\"Not hot\")`."
+updatedDate: 2026-02-11
+---
+
+This lesson introduces branch logic.
+
+<SlideDeck src="/resources/intro-to-python/2_Conditionals.pptx" title="Conditionals slide deck" />
+
+Start with one decision, test both true and false cases, then expand to multiple branches.

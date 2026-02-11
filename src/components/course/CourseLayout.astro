@@ -1,7 +1,7 @@
 ---
 import Layout from '../Layout.astro';
 import CourseSidebar from './CourseSidebar.astro';
-import CoursePager from './CoursePager.astro';
+import LessonNav from './LessonNav.astro';
 import CourseTOC from './CourseTOC.astro';
 
 interface LessonItem {
@@ -55,7 +55,7 @@ const {
     <CourseSidebar courseSlug={courseSlug} modules={modules} currentLessonSlug={currentLessonSlug} />
     <article class="course-main">
       <slot />
-      <CoursePager courseSlug={courseSlug} prevLesson={prevLesson} nextLesson={nextLesson} />
+      <LessonNav courseSlug={courseSlug} prevLesson={prevLesson} nextLesson={nextLesson} />
     </article>
     <CourseTOC headings={headings} />
   </div>
