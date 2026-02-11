@@ -24,6 +24,7 @@ const grouped = resources.reduce((acc, resource) => {
             description={resource.data.description}
             href={`/resources/${resource.slug}`}
             meta={resource.data.type}
+            variant="resource"
           />
         ))}
       </div>

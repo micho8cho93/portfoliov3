@@ -24,6 +24,7 @@ const grouped = courses.reduce((acc, course) => {
             description={course.data.description}
             href={`/courses/${course.slug}`}
             meta={`${course.data.level} · ${course.data.duration}`}
+            variant="course"
           />
         ))}
       </div>

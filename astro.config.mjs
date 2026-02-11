@@ -16,7 +16,7 @@ export default defineConfig({
       ? `/${repository}`
       : '/',
   output: 'static',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   integrations: [sitemap()],
   markdown: {
     syntaxHighlight: 'shiki'

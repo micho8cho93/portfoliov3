@@ -204,16 +204,145 @@ small {
 }
 
 .card {
+  position: relative;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   background: var(--bg-elevated);
   box-shadow: var(--shadow-soft);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-title {
+  margin-bottom: var(--space-sm);
+}
+
+.card-meta {
+  margin-bottom: var(--space-xs);
+}
+
+.card-description {
+  margin-bottom: 0;
+}
+
+.card:hover,
+.card:focus-within {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent-1)) 45%, var(--line));
+  box-shadow: 0 14px 32px rgb(30 24 12 / 14%);
+}
+
+.card:hover::after,
+.card:focus-within::after {
+  opacity: 1;
+}
+
+.card-link:focus-visible {
+  outline-offset: 5px;
+}
+
+.card--post {
+  --card-accent: #7c3aed;
+}
+
+.card--post .card-title {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.card--post .card-meta {
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.card--post::after {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--card-accent) 10%, transparent), transparent 58%);
+}
+
+.card--course {
+  --card-accent: #0f766e;
+}
+
+.card--course .card-meta::before {
+  content: 'Syllabus';
+  display: inline-block;
+  margin-right: var(--space-xs);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--card-accent);
+}
+
+.card--course::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--card-accent) 26%, transparent) 0 0.35rem, transparent 0.35rem);
+}
+
+.card--project {
+  --card-accent: #1d4ed8;
+}
+
+.card--project .card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 35%, var(--line));
+  background: color-mix(in srgb, var(--card-accent) 12%, white);
+}
+
+.card--project::after {
+  background: radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--card-accent) 20%, transparent), transparent 42%);
+}
+
+.card--resource {
+  --card-accent: #b45309;
+  background-image: linear-gradient(135deg, color-mix(in srgb, var(--card-accent) 8%, transparent) 0%, transparent 46%);
+}
+
+.card--resource .card-meta {
+  display: inline-block;
+  border: 1px dashed color-mix(in srgb, var(--card-accent) 42%, var(--line));
+  border-radius: var(--radius-pill);
+  padding: 0.05rem 0.55rem;
+}
+
+.card--resource::after {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--card-accent) 10%, transparent) 0 8px,
+    transparent 8px 16px
+  );
 }
 
 .meta {
   color: var(--ink-muted);
   font-size: 0.95rem;
+}
+
+.post-list-item {
+  display: grid;
+  gap: var(--space-sm);
 }
 
 .tag-list {

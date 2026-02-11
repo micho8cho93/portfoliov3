@@ -3,14 +3,17 @@ interface Props {
   title: string;
   description: string;
   href: string;
+  variant: 'post' | 'course' | 'project' | 'resource';
   meta?: string;
 }
 
-const { title, description, href, meta } = Astro.props;
+const { title, description, href, meta, variant } = Astro.props;
 ---
 
-<article class="card">
-  <h3><a href={href}>{title}</a></h3>
-  {meta && <p class="meta">{meta}</p>}
-  <p>{description}</p>
+<article class={`card card--${variant}`}>
+  <a class="card-link" href={href}>
+    <h3 class="card-title">{title}</h3>
+    {meta && <p class="meta card-meta">{meta}</p>}
+    <p class="card-description">{description}</p>
+  </a>
 </article>
