@@ -128,5 +128,24 @@ Optional:
 
 ## Important configuration
 
-- `astro.config.mjs` now auto-configures `site` and `base` during GitHub Actions deploys so GitHub Pages URLs work for both user/org and project sites.
-- For local/dev builds (or non-GitHub deploys), replace the `https://example.com` fallback with your real canonical domain for correct sitemap/RSS links.
+- `astro.config.mjs` auto-configures `site` and `base` during GitHub Actions deploys so GitHub Pages URLs work for both user/org and project sites.
+- Outside GitHub Actions, the build uses explicit fallback env vars so local or non-GitHub deploys can mirror production:
+  - `PUBLIC_SITE_URL` (preferred, fallback: `SITE_URL`) – canonical origin, e.g. `https://yourname.github.io`.
+  - `PUBLIC_BASE_PATH` (preferred, fallback: `BASE_PATH`) – deployment base path, either `/` (user/org pages) or `/portfoliov3` (project pages).
+- Normalization rules applied in config:
+  - `site` removes trailing slash from the configured origin.
+  - `base` always resolves to `/` or `/<project-repo>` style paths (leading slash, no trailing slash).
+
+### Local production-like builds
+
+Use these commands to test the two GitHub Pages deployment modes without GitHub Actions:
+
+```bash
+# User/org pages (https://<owner>.github.io/)
+PUBLIC_SITE_URL=https://<owner>.github.io PUBLIC_BASE_PATH=/ npm run build
+
+# Project pages (https://<owner>.github.io/portfoliov3/)
+PUBLIC_SITE_URL=https://<owner>.github.io PUBLIC_BASE_PATH=/portfoliov3 npm run build
+```
+
+These values ensure canonical tags, RSS item URLs, and sitemap URLs are generated with the correct origin + base.
