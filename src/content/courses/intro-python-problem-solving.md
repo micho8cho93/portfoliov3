@@ -1,6 +1,7 @@
 ---
 title: Intro to Python for Problem Solving
 description: Foundational Python with a focus on decomposition, iteration, and testing.
+courseId: intro-python-problem-solving
 level: Beginner
 topics:
   - Variables and data types

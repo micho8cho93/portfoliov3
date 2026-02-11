@@ -1,0 +1,102 @@
+---
+import { withBase } from '../../utils/withBase';
+import { lessonRoute } from '../../lib/routes';
+
+interface LessonItem {
+  slug: string;
+  title: string;
+  order: number;
+}
+
+interface ModuleItem {
+  moduleId: string;
+  moduleTitle: string;
+  lessons: LessonItem[];
+}
+
+interface Props {
+  courseSlug: string;
+  modules: ModuleItem[];
+  currentLessonSlug?: string;
+}
+
+const { courseSlug, modules, currentLessonSlug } = Astro.props;
+---
+
+<aside class="course-sidebar" aria-label="Course navigation">
+  <details open>
+    <summary>Course Modules</summary>
+    {modules.map((module) => (
+      <section>
+        <h2>{module.moduleTitle}</h2>
+        <ol>
+          {module.lessons.map((lesson) => {
+            const isActive = lesson.slug === currentLessonSlug;
+            return (
+              <li>
+                <a
+                  href={withBase(lessonRoute(courseSlug, lesson.slug))}
+                  aria-current={isActive ? 'page' : undefined}
+                  class={isActive ? 'active' : undefined}
+                >
+                  {lesson.title}
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    ))}
+  </details>
+</aside>
+
+<style>
+  .course-sidebar {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+    position: sticky;
+    top: var(--space-md);
+  }
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  section + section {
+    margin-top: var(--space-md);
+  }
+
+  ol {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  a.active {
+    color: var(--accent-1);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (min-width: 56rem) {
+    details {
+      display: block;
+    }
+
+    summary {
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+  }
+</style>

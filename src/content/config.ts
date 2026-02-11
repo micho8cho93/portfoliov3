@@ -19,14 +19,36 @@ const courses = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    courseId: z.string(),
     level: z.enum(['Beginner', 'Intermediate', 'Advanced']),
     topics: z.array(z.string()),
     duration: z.string(),
     audience: z.string(),
     status: z.enum(['Active', 'Archived', 'Planned']),
+    skills: z.array(z.string()).optional(),
+    prereqs: z.array(z.string()).optional(),
+    estimatedHours: z.number().optional(),
+    coverImage: z.string().optional(),
     startDate: z.coerce.date().optional(),
     updatedDate: z.coerce.date().optional(),
     featured: z.boolean().optional()
+  })
+});
+
+const lessons = defineCollection({
+  type: 'content',
+  schema: z.object({
+    courseId: z.string(),
+    moduleId: z.string(),
+    moduleTitle: z.string(),
+    title: z.string(),
+    description: z.string(),
+    order: z.number(),
+    estimatedMinutes: z.number(),
+    objectives: z.array(z.string()),
+    prereqs: z.array(z.string()).optional(),
+    draft: z.boolean().default(false),
+    updatedDate: z.coerce.date().optional()
   })
 });
 
@@ -60,4 +82,4 @@ const resources = defineCollection({
     })
 });
 
-export const collections = { posts, courses, projects, resources };
+export const collections = { posts, courses, lessons, projects, resources };

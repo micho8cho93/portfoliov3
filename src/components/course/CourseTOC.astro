@@ -1,0 +1,62 @@
+---
+interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings?: TocHeading[];
+}
+
+const { headings = [] } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+{tocHeadings.length > 0 && (
+  <aside class="course-toc" aria-label="Table of contents">
+    <h2>On this page</h2>
+    <ul>
+      {tocHeadings.map((heading) => (
+        <li class={heading.depth === 3 ? 'nested' : undefined}>
+          <a href={`#${heading.slug}`}>{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .course-toc {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+    position: sticky;
+    top: var(--space-md);
+  }
+
+  .course-toc h2 {
+    font-size: 1rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .course-toc ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .course-toc li + li {
+    margin-top: var(--space-xs);
+  }
+
+  .nested {
+    padding-left: var(--space-md);
+    font-size: 0.95rem;
+  }
+
+  .course-toc a {
+    text-decoration: none;
+  }
+</style>

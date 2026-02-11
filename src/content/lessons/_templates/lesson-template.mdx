@@ -1,0 +1,67 @@
+---
+courseId: example-course
+moduleId: module-1
+moduleTitle: Core Foundations
+title: Lesson Title
+description: One sentence summary of what learners will do.
+order: 1
+estimatedMinutes: 35
+objectives:
+  - Understand the core concept in context.
+  - Apply the concept in a small coding task.
+  - Reflect on trade-offs with a short explanation.
+prereqs:
+  - Basic programming syntax
+  - Comfort with loops and conditionals
+draft: true
+updatedDate: 2026-01-01
+---
+
+import Quiz from '../../../components/course/Quiz';
+import FreeResponse from '../../../components/course/FreeResponse';
+import LessonChecklist from '../../../components/course/LessonChecklist';
+import Callout from '../../../components/course/Callout.astro';
+import Hint from '../../../components/course/Hint.astro';
+
+# Lesson Title
+
+<Callout type="info" title="Template note">
+  Replace this template content with course-specific lesson content.
+</Callout>
+
+## Warm-up
+
+Use this section for retrieval practice.
+
+## Activity
+
+<Quiz
+  courseId="example-course"
+  lessonSlug="lesson-title"
+  componentId="quick-check"
+  question="What is the main objective of this lesson?"
+  options={[
+    { id: 'a', label: 'Memorize syntax only' },
+    { id: 'b', label: 'Apply a concept and explain choices' },
+    { id: 'c', label: 'Skip implementation work' }
+  ]}
+  correctOptionId="b"
+/>
+
+<FreeResponse
+  courseId="example-course"
+  lessonSlug="lesson-title"
+  componentId="reflection"
+  prompt="Explain how you would use this concept in your own project."
+/>
+
+<LessonChecklist
+  courseId="example-course"
+  lessonSlug="lesson-title"
+  componentId="completion"
+  items={['Read the introduction', 'Complete the activity', 'Write a short reflection']}
+/>
+
+<Hint summary="Need a starting point?">
+  Start by writing one small example and then iterate.
+</Hint>

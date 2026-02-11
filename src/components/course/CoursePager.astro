@@ -1,0 +1,49 @@
+---
+import { withBase } from '../../utils/withBase';
+import { lessonRoute } from '../../lib/routes';
+
+interface PagerLesson {
+  slug: string;
+  title: string;
+}
+
+interface Props {
+  courseSlug: string;
+  prevLesson?: PagerLesson;
+  nextLesson?: PagerLesson;
+}
+
+const { courseSlug, prevLesson, nextLesson } = Astro.props;
+---
+
+<nav class="course-pager" aria-label="Lesson navigation">
+  <div>
+    {prevLesson && <a href={withBase(lessonRoute(courseSlug, prevLesson.slug))}>← {prevLesson.title}</a>}
+  </div>
+  <div>
+    {nextLesson && <a href={withBase(lessonRoute(courseSlug, nextLesson.slug))}>{nextLesson.title} →</a>}
+  </div>
+</nav>
+
+<style>
+  .course-pager {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+  }
+
+  .course-pager div:last-child {
+    text-align: right;
+  }
+
+  @media (max-width: 42rem) {
+    .course-pager {
+      grid-template-columns: 1fr;
+    }
+
+    .course-pager div:last-child {
+      text-align: left;
+    }
+  }
+</style>

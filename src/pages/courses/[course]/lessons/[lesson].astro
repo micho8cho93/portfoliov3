@@ -1,0 +1,120 @@
+---
+import { getCollection, render } from 'astro:content';
+import CourseLayout from '../../../../components/course/CourseLayout.astro';
+import Callout from '../../../../components/course/Callout.astro';
+import Hint from '../../../../components/course/Hint.astro';
+
+
+
+export async function getStaticPaths() {
+  const toLessonSlug = (entrySlug: string) => {
+    const parts = entrySlug.split('/').filter(Boolean);
+    return parts.at(-1) ?? entrySlug;
+  };
+  const courseEntries = await getCollection('courses');
+  const lessonEntries = await getCollection('lessons', ({ data }) => !data.draft);
+
+  const courseById = new Map(courseEntries.map((course) => [course.data.courseId, course]));
+
+  return lessonEntries
+    .map((lesson) => {
+      const course = courseById.get(lesson.data.courseId);
+      if (!course) {
+        return null;
+      }
+
+      return {
+        params: { course: course.slug, lesson: toLessonSlug(lesson.slug) },
+        props: { course, lesson }
+      };
+    })
+    .filter(Boolean);
+}
+
+const lessonSlug = (entrySlug: string) => {
+  const parts = entrySlug.split('/').filter(Boolean);
+  return parts.at(-1) ?? entrySlug;
+};
+
+const { course, lesson } = Astro.props;
+const currentLessonSlug = lessonSlug(lesson.slug);
+const lessonEntries = await getCollection('lessons', ({ data }) => !data.draft && data.courseId === course.data.courseId);
+const orderedLessons = [...lessonEntries].sort((a, b) => a.data.order - b.data.order);
+
+const currentIndex = orderedLessons.findIndex((item) => lessonSlug(item.slug) === currentLessonSlug);
+const prevLesson = currentIndex > 0 ? orderedLessons[currentIndex - 1] : undefined;
+const nextLesson = currentIndex >= 0 && currentIndex < orderedLessons.length - 1 ? orderedLessons[currentIndex + 1] : undefined;
+
+const moduleMap = new Map<string, { moduleId: string; moduleTitle: string; lessons: { slug: string; title: string; order: number }[] }>();
+for (const item of orderedLessons) {
+  const existing = moduleMap.get(item.data.moduleId);
+  if (existing) {
+    existing.lessons.push({ slug: lessonSlug(item.slug), title: item.data.title, order: item.data.order });
+    continue;
+  }
+
+  moduleMap.set(item.data.moduleId, {
+    moduleId: item.data.moduleId,
+    moduleTitle: item.data.moduleTitle,
+    lessons: [{ slug: lessonSlug(item.slug), title: item.data.title, order: item.data.order }]
+  });
+}
+
+const modules = Array.from(moduleMap.values())
+  .map((module) => ({ ...module, lessons: module.lessons.sort((a, b) => a.order - b.order) }))
+  .sort((a, b) => {
+    const firstOrderA = a.lessons[0]?.order ?? Number.POSITIVE_INFINITY;
+    const firstOrderB = b.lessons[0]?.order ?? Number.POSITIVE_INFINITY;
+    if (firstOrderA !== firstOrderB) {
+      return firstOrderA - firstOrderB;
+    }
+
+    return a.moduleTitle.localeCompare(b.moduleTitle);
+  });
+
+const { Content, headings } = await render(lesson);
+---
+
+<CourseLayout
+  pageTitle={`${lesson.data.title} | ${course.data.title}`}
+  pageDescription={lesson.data.description}
+  courseSlug={course.slug}
+  modules={modules}
+  currentLessonSlug={currentLessonSlug}
+  prevLesson={prevLesson && { slug: lessonSlug(prevLesson.slug), title: prevLesson.data.title }}
+  nextLesson={nextLesson && { slug: lessonSlug(nextLesson.slug), title: nextLesson.data.title }}
+  headings={headings}
+>
+  <header class="lesson-header">
+    <p class="eyebrow">{lesson.data.moduleTitle}</p>
+    <h1>{lesson.data.title}</h1>
+    <p>{lesson.data.description}</p>
+    <p class="meta">{lesson.data.estimatedMinutes} minutes · {lesson.data.objectives.length} learning objectives</p>
+  </header>
+
+  <Content components={{ Callout, Hint }} />
+</CourseLayout>
+
+<style>
+  .lesson-header {
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: var(--space-md);
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-xs);
+    font-size: 0.78rem;
+  }
+
+  .meta {
+    color: var(--ink-muted);
+  }
+
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+</style>

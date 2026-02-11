@@ -1,17 +1,55 @@
 ---
-import { withBase } from "../../utils/withBase";
-import { contact, courses } from "../../lib/routes";
+import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import TagList from '../../components/TagList.astro';
-import { getCollection, render } from 'astro:content';
+import { withBase } from '../../utils/withBase';
+import { courseRoute, courses, lessonRoute } from '../../lib/routes';
 
 export async function getStaticPaths() {
-  const courses = await getCollection('courses');
-  return courses.map((course) => ({ params: { slug: course.slug }, props: { course } }));
+  const courseEntries = await getCollection('courses');
+  return courseEntries.map((course) => ({ params: { slug: course.slug }, props: { course } }));
 }
 
 const { course } = Astro.props;
 const { Content } = await render(course);
+
+
+function lessonSlug(entrySlug: string): string {
+  const parts = entrySlug.split('/').filter(Boolean);
+  return parts.at(-1) ?? entrySlug;
+}
+
+const allLessons = await getCollection('lessons', ({ data }) => !data.draft && data.courseId === course.data.courseId);
+const orderedLessons = [...allLessons].sort((a, b) => a.data.order - b.data.order);
+
+const moduleMap = new Map<string, { moduleId: string; moduleTitle: string; lessons: typeof orderedLessons }>();
+for (const lesson of orderedLessons) {
+  const existing = moduleMap.get(lesson.data.moduleId);
+  if (existing) {
+    existing.lessons.push(lesson);
+    continue;
+  }
+
+  moduleMap.set(lesson.data.moduleId, {
+    moduleId: lesson.data.moduleId,
+    moduleTitle: lesson.data.moduleTitle,
+    lessons: [lesson]
+  });
+}
+
+const modules = Array.from(moduleMap.values())
+  .map((module) => ({ ...module, lessons: module.lessons.sort((a, b) => a.data.order - b.data.order) }))
+  .sort((a, b) => {
+    const firstOrderA = a.lessons[0]?.data.order ?? Number.POSITIVE_INFINITY;
+    const firstOrderB = b.lessons[0]?.data.order ?? Number.POSITIVE_INFINITY;
+    if (firstOrderA !== firstOrderB) {
+      return firstOrderA - firstOrderB;
+    }
+
+    return a.moduleTitle.localeCompare(b.moduleTitle);
+  });
+
+const firstLesson = orderedLessons[0];
 ---
 
 <Layout title={`${course.data.title} | Courses`} description={course.data.description}>
@@ -21,8 +59,37 @@ const { Content } = await render(course);
       <h1>{course.data.title}</h1>
       <p>{course.data.description}</p>
       <Content />
-      <p><a class="button" href={withBase(contact)}>Request syllabus</a></p>
+
+      {firstLesson ? (
+        <p>
+          <a class="button" href={withBase(lessonRoute(course.slug, lessonSlug(firstLesson.slug)))}>Start Course</a>
+        </p>
+      ) : (
+        <p>
+          <a class="button secondary" href={withBase(courseRoute(course.slug))}>Course Overview</a>
+        </p>
+      )}
+
+      {modules.length > 0 && (
+        <section class="syllabus">
+          <h2>Syllabus</h2>
+          {modules.map((module) => (
+            <article class="module-card">
+              <h3>{module.moduleTitle}</h3>
+              <ul>
+                {module.lessons.map((lesson) => (
+                  <li>
+                    <a href={withBase(lessonRoute(course.slug, lessonSlug(lesson.slug)))}>{lesson.data.title}</a>
+                    <span> · {lesson.data.estimatedMinutes} min</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </section>
+      )}
     </article>
+
     <aside class="meta-card">
       <h2>Course details</h2>
       <ul>
@@ -30,10 +97,52 @@ const { Content } = await render(course);
         <li><strong>Duration:</strong> {course.data.duration}</li>
         <li><strong>Audience:</strong> {course.data.audience}</li>
         <li><strong>Status:</strong> {course.data.status}</li>
+        {course.data.estimatedHours && <li><strong>Estimated hours:</strong> {course.data.estimatedHours}</li>}
         {course.data.startDate && <li><strong>Start date:</strong> {course.data.startDate.toLocaleDateString()}</li>}
       </ul>
+
       <h3>Topics</h3>
       <TagList tags={course.data.topics} />
+
+      {course.data.skills && course.data.skills.length > 0 && (
+        <>
+          <h3>Skills</h3>
+          <TagList tags={course.data.skills} />
+        </>
+      )}
+
+      {course.data.prereqs && course.data.prereqs.length > 0 && (
+        <>
+          <h3>Prerequisites</h3>
+          <ul>
+            {course.data.prereqs.map((prereq) => (
+              <li>{prereq}</li>
+            ))}
+          </ul>
+        </>
+      )}
     </aside>
   </div>
 </Layout>
+
+<style>
+  .syllabus {
+    margin-top: var(--space-xl);
+  }
+
+  .module-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+  }
+
+  .module-card ul {
+    margin-bottom: 0;
+  }
+
+  .module-card li + li {
+    margin-top: var(--space-xs);
+  }
+</style>
