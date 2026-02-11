@@ -1,3 +1,4 @@
+---
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
@@ -5,6 +6,8 @@ import { getCollection } from 'astro:content';
 const projects = (await getCollection('projects')).sort(
   (a, b) => Number(b.data.featured ?? false) - Number(a.data.featured ?? false) || b.data.year - a.data.year
 );
+---
+
 <Layout title="Projects" description="Selected projects in CS education and developer tooling.">
   <h1>Projects</h1>
   <div class="grid">
