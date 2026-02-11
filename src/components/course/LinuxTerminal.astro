@@ -448,8 +448,8 @@ const inputId = `linux-terminal-${Math.random().toString(36).slice(2, 10)}`;
 
   .linux-terminal-shell {
     border-top: 1px solid color-mix(in srgb, var(--ink-primary) 12%, transparent);
-    background: #101717;
-    color: #d9efe9;
+    background: #000;
+    color: #f5f5f5;
   }
 
   .linux-terminal-output {
@@ -463,6 +463,8 @@ const inputId = `linux-terminal-${Math.random().toString(36).slice(2, 10)}`;
     font-family: var(--font-mono);
     font-size: 0.88rem;
     line-height: 1.45;
+    background: #000;
+    color: #f5f5f5;
   }
 
   .linux-terminal-input-row {
@@ -472,22 +474,22 @@ const inputId = `linux-terminal-${Math.random().toString(36).slice(2, 10)}`;
     align-items: center;
     padding: var(--space-sm);
     border-top: 1px solid rgb(217 239 233 / 22%);
-    background: #0a1111;
+    background: #000;
   }
 
   .linux-terminal-prompt {
     font-family: var(--font-mono);
     font-size: 0.82rem;
     white-space: nowrap;
-    color: #9ce4cb;
+    color: #8dfdd3;
   }
 
   .linux-terminal-input {
     width: 100%;
     border: 1px solid rgb(217 239 233 / 26%);
     border-radius: var(--radius-sm);
-    background: #111d1d;
-    color: #e4fff8;
+    background: #060606;
+    color: #f5f5f5;
     padding: 0.45rem 0.58rem;
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -501,14 +503,14 @@ const inputId = `linux-terminal-${Math.random().toString(36).slice(2, 10)}`;
     border: 1px solid rgb(217 239 233 / 28%);
     border-radius: var(--radius-sm);
     padding: 0.4rem 0.7rem;
-    background: color-mix(in srgb, #2f9e7a 35%, #111d1d);
-    color: #e4fff8;
+    background: color-mix(in srgb, #2f9e7a 45%, #111);
+    color: #fff;
     font-size: 0.82rem;
     cursor: pointer;
   }
 
   .linux-terminal-button.ghost {
-    background: #111d1d;
+    background: #060606;
   }
 
   .linux-terminal-status {
