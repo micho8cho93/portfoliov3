@@ -2,11 +2,12 @@
   --bg-base: #f4f2ec;
   --bg-elevated: #fcfbf8;
   --ink-primary: #191714;
-  --ink-muted: #5f5951;
+  --ink-muted: #4f4a43;
   --accent-1: #0f766e;
-  --accent-2: #1d4ed8;
+  --accent-2: #1e40af;
   --line: #d8d0c4;
-  --focus: #38bdf8;
+  --focus: #0b57d0;
+  --focus-contrast: #ffffff;
 
   --font-display:
     "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
@@ -82,10 +83,12 @@ a {
   color: var(--accent-2);
 }
 
-a:focus-visible,
-button:focus-visible {
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 3px solid var(--focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px
+    color-mix(in srgb, var(--focus-contrast) 75%, transparent);
+  border-radius: var(--radius-sm);
 }
 
 .container {
@@ -214,6 +217,10 @@ main {
   padding-bottom: var(--space-2xl);
 }
 
+main > section {
+  margin-block: var(--space-2xl);
+}
+
 h1,
 h2,
 h3,
@@ -259,6 +266,18 @@ li {
   letter-spacing: -0.003em;
   margin-top: 0;
   margin-bottom: var(--space-md);
+}
+
+.measure {
+  max-inline-size: 70ch;
+}
+
+article > :is(p, ul, ol, blockquote, pre, table) {
+  max-inline-size: 72ch;
+}
+
+article > :is(h2, h3, h4) {
+  margin-top: var(--space-xl);
 }
 
 small {
@@ -367,6 +386,7 @@ small {
 
 .card-link:focus-visible {
   outline-offset: 5px;
+  border-radius: var(--radius-sm);
 }
 
 .card--post {
@@ -567,6 +587,10 @@ small {
 .footer-heading {
   font-size: 1rem;
   margin-bottom: var(--space-sm);
+}
+
+.section-heading {
+  margin-bottom: var(--space-md);
 }
 
 .footer-column ul {

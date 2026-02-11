@@ -1,32 +1,39 @@
 ---
-import Layout from '../components/Layout.astro';
-import Card from '../components/Card.astro';
-import { getCollection } from 'astro:content';
+import Layout from "../components/Layout.astro";
+import Card from "../components/Card.astro";
+import { getCollection } from "astro:content";
 
-const courses = (await getCollection('courses')).filter((item) => item.data.featured).slice(0, 3);
-const projects = (await getCollection('projects'))
-  .sort((a, b) => Number(b.data.featured ?? false) - Number(a.data.featured ?? false) || b.data.year - a.data.year)
+const courses = (await getCollection("courses"))
+  .filter((item) => item.data.featured)
   .slice(0, 3);
-const resources = (await getCollection('resources')).slice(0, 3);
+const projects = (await getCollection("projects"))
+  .sort(
+    (a, b) =>
+      Number(b.data.featured ?? false) - Number(a.data.featured ?? false) ||
+      b.data.year - a.data.year,
+  )
+  .slice(0, 3);
+const resources = (await getCollection("resources")).slice(0, 3);
 
 const [featuredCourse, ...courseRemainder] = courses;
 const [featuredProject, ...projectRemainder] = projects;
 const [featuredResource, ...resourceRemainder] = resources;
 
 const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Alex Morgan',
-  jobTitle: 'CS Educator & Athletic Director',
-  description: 'Computer science educator focused on equitable, project-based learning.',
-  url: Astro.site
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Alex Morgan",
+  jobTitle: "CS Educator & Athletic Director",
+  description:
+    "Computer science educator focused on equitable, project-based learning.",
+  url: Astro.site,
 };
 
 const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Alex Morgan CS Education',
-  url: Astro.site
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Alex Morgan CS Education",
+  url: Astro.site,
 };
 ---
 
@@ -34,14 +41,16 @@ const websiteSchema = {
   title="Alex Morgan | CS Educator & Thought Leader"
   description="Teaching-focused portfolio and writing on computer science education."
 >
-  <section class="hero-manifesto">
+  <section class="hero-manifesto" aria-labelledby="hero-title">
     <div class="hero-grid">
       <div>
         <p class="eyebrow">Hero manifesto</p>
-        <h1 class="reveal-load reveal-load--headline">Helping students think like engineers, not just coders.</h1>
-        <p class="lead reveal-load reveal-load--subcopy">
-          I design project-driven classes where students debug in public, revise with feedback, and connect technical
-          skills to community impact.
+        <h1 id="hero-title" class="reveal-load reveal-load--headline">
+          Helping students think like engineers, not just coders.
+        </h1>
+        <p class="lead measure reveal-load reveal-load--subcopy">
+          I design project-driven classes where students debug in public, revise
+          with feedback, and connect technical skills to community impact.
         </p>
         <div class="actions reveal-load reveal-load--cta">
           <a class="button" href="/blog">Read teaching notes</a>
@@ -52,126 +61,176 @@ const websiteSchema = {
       <aside class="signature-block" aria-label="Teaching thesis">
         <p class="signature-label">Signature block</p>
         <blockquote>
-          “Rigor belongs to every learner when we teach process, reflection, and iteration—not just syntax.”
+          “Rigor belongs to every learner when we teach process, reflection, and
+          iteration—not just syntax.”
         </blockquote>
-        <p class="signature-meta">My teaching thesis: equitable CS through visible thinking routines.</p>
+        <p class="signature-meta">
+          My teaching thesis: equitable CS through visible thinking routines.
+        </p>
       </aside>
     </div>
   </section>
 
-  <section class="proof-practice">
+  <section class="proof-practice" aria-labelledby="proof-title">
     <div class="proof-grid">
       <div>
         <p class="eyebrow">Proof of practice</p>
-        <h2>Courses, projects, and resources from the classroom floor</h2>
-        <p>
-          A snapshot of what I run, build, and share for teachers. Each stream highlights one flagship piece followed by
-          quick-access supporting items.
+        <h2 id="proof-title" class="section-heading">
+          Courses, projects, and resources from the classroom floor
+        </h2>
+        <p class="measure">
+          A snapshot of what I run, build, and share for teachers. Each stream
+          highlights one flagship piece followed by quick-access supporting
+          items.
         </p>
       </div>
 
       <div class="feature-panel">
         <article class="featured-item">
           <p class="label">Featured course</p>
-          {featuredCourse ? (
-            <>
-              <h3><a href={`/courses/${featuredCourse.slug}`}>{featuredCourse.data.title}</a></h3>
-              <p>{featuredCourse.data.description}</p>
-              <p class="meta">{featuredCourse.data.level} · {featuredCourse.data.duration}</p>
-            </>
-          ) : (
-            <p>Course showcase coming soon.</p>
-          )}
+          {
+            featuredCourse ? (
+              <>
+                <h3>
+                  <a href={`/courses/${featuredCourse.slug}`}>
+                    {featuredCourse.data.title}
+                  </a>
+                </h3>
+                <p>{featuredCourse.data.description}</p>
+                <p class="meta">
+                  {featuredCourse.data.level} · {featuredCourse.data.duration}
+                </p>
+              </>
+            ) : (
+              <p>Course showcase coming soon.</p>
+            )
+          }
         </article>
 
         <div class="compact-grid">
-          {courseRemainder.map((course) => (
-            <Card
-              title={course.data.title}
-              description={course.data.description}
-              href={`/courses/${course.slug}`}
-              meta={`${course.data.level} · ${course.data.duration}`}
-              variant="course"
-            />
-          ))}
+          {
+            courseRemainder.map((course) => (
+              <Card
+                title={course.data.title}
+                description={course.data.description}
+                href={`/courses/${course.slug}`}
+                meta={`${course.data.level} · ${course.data.duration}`}
+                variant="course"
+              />
+            ))
+          }
         </div>
 
         <article class="featured-item">
           <p class="label">Featured project</p>
-          {featuredProject ? (
-            <>
-              <h3><a href={`/projects/${featuredProject.slug}`}>{featuredProject.data.title}</a></h3>
-              <p>{featuredProject.data.description}</p>
-              <p class="meta">{featuredProject.data.year} · {featuredProject.data.role}</p>
-            </>
-          ) : (
-            <p>Project spotlight coming soon.</p>
-          )}
+          {
+            featuredProject ? (
+              <>
+                <h3>
+                  <a href={`/projects/${featuredProject.slug}`}>
+                    {featuredProject.data.title}
+                  </a>
+                </h3>
+                <p>{featuredProject.data.description}</p>
+                <p class="meta">
+                  {featuredProject.data.year} · {featuredProject.data.role}
+                </p>
+              </>
+            ) : (
+              <p>Project spotlight coming soon.</p>
+            )
+          }
         </article>
 
         <div class="compact-grid">
-          {projectRemainder.map((project) => (
-            <Card
-              title={project.data.title}
-              description={project.data.description}
-              href={`/projects/${project.slug}`}
-              meta={`${project.data.year} · ${project.data.role}`}
-              variant="project"
-            />
-          ))}
+          {
+            projectRemainder.map((project) => (
+              <Card
+                title={project.data.title}
+                description={project.data.description}
+                href={`/projects/${project.slug}`}
+                meta={`${project.data.year} · ${project.data.role}`}
+                variant="project"
+              />
+            ))
+          }
         </div>
 
         <article class="featured-item">
           <p class="label">Featured resource</p>
-          {featuredResource ? (
-            <>
-              <h3><a href={`/resources/${featuredResource.slug}`}>{featuredResource.data.title}</a></h3>
-              <p>{featuredResource.data.description}</p>
-              <p class="meta">{featuredResource.data.type}</p>
-            </>
-          ) : (
-            <p>Resource feature coming soon.</p>
-          )}
+          {
+            featuredResource ? (
+              <>
+                <h3>
+                  <a href={`/resources/${featuredResource.slug}`}>
+                    {featuredResource.data.title}
+                  </a>
+                </h3>
+                <p>{featuredResource.data.description}</p>
+                <p class="meta">{featuredResource.data.type}</p>
+              </>
+            ) : (
+              <p>Resource feature coming soon.</p>
+            )
+          }
         </article>
 
         <div class="compact-grid">
-          {resourceRemainder.map((resource) => (
-            <Card
-              title={resource.data.title}
-              description={resource.data.description}
-              href={`/resources/${resource.slug}`}
-              meta={resource.data.type}
-              variant="resource"
-            />
-          ))}
+          {
+            resourceRemainder.map((resource) => (
+              <Card
+                title={resource.data.title}
+                description={resource.data.description}
+                href={`/resources/${resource.slug}`}
+                meta={resource.data.type}
+                variant="resource"
+              />
+            ))
+          }
         </div>
       </div>
     </div>
   </section>
 
-  <section class="principles">
+  <section class="principles" aria-labelledby="principles-title">
     <p class="eyebrow">Pedagogy principles</p>
-    <h2>How I structure learning that lasts</h2>
+    <h2 id="principles-title" class="section-heading">
+      How I structure learning that lasts
+    </h2>
     <div class="principles-grid">
       <article>
         <h3>Studio over lecture</h3>
-        <p>Students spend most of class making, testing, and critiquing, with mini-lessons at point of need.</p>
+        <p>
+          Students spend most of class making, testing, and critiquing, with
+          mini-lessons at point of need.
+        </p>
       </article>
       <article>
         <h3>Feedback loops first</h3>
-        <p>Every unit includes checkpoints, reflection prompts, and revision cycles so growth is visible.</p>
+        <p>
+          Every unit includes checkpoints, reflection prompts, and revision
+          cycles so growth is visible.
+        </p>
       </article>
       <article>
         <h3>Identity and access</h3>
-        <p>I anchor technical work in student voice and real-world context to broaden who feels they belong in CS.</p>
+        <p>
+          I anchor technical work in student voice and real-world context to
+          broaden who feels they belong in CS.
+        </p>
       </article>
     </div>
   </section>
 
-  <section class="conversion-band">
+  <section class="conversion-band" aria-labelledby="conversion-title">
     <p class="eyebrow">Conversion CTA band</p>
-    <h2>Bring this approach to your school or district</h2>
-    <p>Whether you need curriculum coaching, workshop facilitation, or program strategy, let's design the next step.</p>
+    <h2 id="conversion-title" class="section-heading">
+      Bring this approach to your school or district
+    </h2>
+    <p class="measure">
+      Whether you need curriculum coaching, workshop facilitation, or program
+      strategy, let's design the next step.
+    </p>
     <div class="actions">
       <a class="button" href="/contact">Start a conversation</a>
       <a class="button secondary" href="/courses">Explore all courses</a>
@@ -234,13 +293,13 @@ const websiteSchema = {
   }
 
   .signature-block::before {
-    content: '⟨';
+    content: "⟨";
     top: 0.15rem;
     left: 0.5rem;
   }
 
   .signature-block::after {
-    content: '⟩';
+    content: "⟩";
     right: 0.5rem;
     bottom: 0.15rem;
   }
