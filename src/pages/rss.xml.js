@@ -2,6 +2,9 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { blogPost } from '../lib/routes';
 
+const basePath = import.meta.env.BASE_URL;
+const normalizedBase = basePath === '/' ? '' : basePath.replace(/\/$/, '');
+
 export async function GET(context) {
   const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
@@ -10,12 +13,12 @@ export async function GET(context) {
   return rss({
     title: 'CS Educator Blog',
     description: 'Writing on teaching computer science and curriculum design.',
-    site: context.site,
+    site: new URL(basePath, context.site).toString(),
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.pubDate,
-      link: `${blogPost(post.slug)}/`
+      link: `${normalizedBase}${blogPost(post.slug)}/`
     }))
   });
 }
