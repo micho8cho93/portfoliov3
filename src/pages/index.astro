@@ -91,6 +91,7 @@ const websiteSchema = {
               description={course.data.description}
               href={`/courses/${course.slug}`}
               meta={`${course.data.level} · ${course.data.duration}`}
+              variant="course"
             />
           ))}
         </div>
@@ -115,6 +116,7 @@ const websiteSchema = {
               description={project.data.description}
               href={`/projects/${project.slug}`}
               meta={`${project.data.year} · ${project.data.role}`}
+              variant="project"
             />
           ))}
         </div>
@@ -139,6 +141,7 @@ const websiteSchema = {
               description={resource.data.description}
               href={`/resources/${resource.slug}`}
               meta={resource.data.type}
+              variant="resource"
             />
           ))}
         </div>

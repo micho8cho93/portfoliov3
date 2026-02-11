@@ -14,12 +14,13 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   <p><a href="/rss.xml">Subscribe via RSS</a></p>
   <div class="stack">
     {posts.map((post) => (
-      <article class="card">
+      <article class="post-list-item">
         <Card
           title={post.data.title}
           description={post.data.description}
           href={`/blog/${post.slug}`}
           meta={post.data.pubDate.toLocaleDateString()}
+          variant="post"
         />
         <TagList tags={post.data.tags ?? []} />
       </article>

@@ -17,6 +17,7 @@ const projects = (await getCollection('projects')).sort(
         description={project.data.description}
         href={`/projects/${project.slug}`}
         meta={`${project.data.year} · ${project.data.role}`}
+        variant="project"
       />
     ))}
   </div>
