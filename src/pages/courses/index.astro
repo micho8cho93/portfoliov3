@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { course as courseRoute } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
@@ -19,12 +20,12 @@ const grouped = courses.reduce((acc, course) => {
     <section>
       <h2>{status}</h2>
       <div class="grid">
-        {items.map((course) => (
+        {items.map((courseItem) => (
           <Card
-            title={course.data.title}
-            description={course.data.description}
-            href={withBase(`/courses/${course.slug}`)}
-            meta={`${course.data.level} · ${course.data.duration}`}
+            title={courseItem.data.title}
+            description={courseItem.data.description}
+            href={withBase(courseRoute(courseItem.slug))}
+            meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
             variant="course"
           />
         ))}

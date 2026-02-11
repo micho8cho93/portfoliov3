@@ -96,6 +96,12 @@ Optional:
 - `/rss.xml`
 - `/sitemap-index.xml`
 
+
+## Contributor note
+
+- Never hardcode internal `/...` links directly in pages or components.
+- Use route constants/builders from `src/lib/routes.ts` and wrap render-time URLs with `withBase(...)` from `src/utils/withBase.ts` for consistent base-aware links.
+
 ## 7) Deployment (static hosting)
 
 

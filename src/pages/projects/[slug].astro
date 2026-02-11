@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { projects } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import TagList from '../../components/TagList.astro';
 import { getCollection, render } from 'astro:content';
@@ -14,7 +15,7 @@ const { Content } = await render(project);
 ---
 
 <Layout title={`${project.data.title} | Projects`} description={project.data.description}>
-  <p><a href={withBase("/projects")}>← Back to projects</a></p>
+  <p><a href={withBase(projects)}>← Back to projects</a></p>
   <article>
     <h1>{project.data.title}</h1>
     <p>{project.data.description}</p>

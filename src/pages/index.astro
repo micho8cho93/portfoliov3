@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../utils/withBase";
+import { blog, contact, courses as coursesRoute, course, project, resource } from "../lib/routes";
 import Layout from "../components/Layout.astro";
 import Card from "../components/Card.astro";
 import { getCollection } from "astro:content";
@@ -54,8 +55,8 @@ const websiteSchema = {
           with feedback, and connect technical skills to community impact.
         </p>
         <div class="actions reveal-load reveal-load--cta">
-          <a class="button" href={withBase("/blog")}>Read teaching notes</a>
-          <a class="button secondary" href={withBase("/contact")}>Book a workshop</a>
+          <a class="button" href={withBase(blog)}>Read teaching notes</a>
+          <a class="button secondary" href={withBase(contact)}>Book a workshop</a>
         </div>
       </div>
 
@@ -93,7 +94,7 @@ const websiteSchema = {
             featuredCourse ? (
               <>
                 <h3>
-                  <a href={withBase(`/courses/${featuredCourse.slug}`)}>
+                  <a href={withBase(course(featuredCourse.slug))}>
                     {featuredCourse.data.title}
                   </a>
                 </h3>
@@ -110,12 +111,12 @@ const websiteSchema = {
 
         <div class="compact-grid">
           {
-            courseRemainder.map((course) => (
+            courseRemainder.map((courseItem) => (
               <Card
-                title={course.data.title}
-                description={course.data.description}
-                href={withBase(`/courses/${course.slug}`)}
-                meta={`${course.data.level} · ${course.data.duration}`}
+                title={courseItem.data.title}
+                description={courseItem.data.description}
+                href={withBase(course(courseItem.slug))}
+                meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
                 variant="course"
               />
             ))
@@ -128,7 +129,7 @@ const websiteSchema = {
             featuredProject ? (
               <>
                 <h3>
-                  <a href={withBase(`/projects/${featuredProject.slug}`)}>
+                  <a href={withBase(project(featuredProject.slug))}>
                     {featuredProject.data.title}
                   </a>
                 </h3>
@@ -145,12 +146,12 @@ const websiteSchema = {
 
         <div class="compact-grid">
           {
-            projectRemainder.map((project) => (
+            projectRemainder.map((projectItem) => (
               <Card
-                title={project.data.title}
-                description={project.data.description}
-                href={withBase(`/projects/${project.slug}`)}
-                meta={`${project.data.year} · ${project.data.role}`}
+                title={projectItem.data.title}
+                description={projectItem.data.description}
+                href={withBase(project(projectItem.slug))}
+                meta={`${projectItem.data.year} · ${projectItem.data.role}`}
                 variant="project"
               />
             ))
@@ -163,7 +164,7 @@ const websiteSchema = {
             featuredResource ? (
               <>
                 <h3>
-                  <a href={withBase(`/resources/${featuredResource.slug}`)}>
+                  <a href={withBase(resource(featuredResource.slug))}>
                     {featuredResource.data.title}
                   </a>
                 </h3>
@@ -178,12 +179,12 @@ const websiteSchema = {
 
         <div class="compact-grid">
           {
-            resourceRemainder.map((resource) => (
+            resourceRemainder.map((resourceItem) => (
               <Card
-                title={resource.data.title}
-                description={resource.data.description}
-                href={withBase(`/resources/${resource.slug}`)}
-                meta={resource.data.type}
+                title={resourceItem.data.title}
+                description={resourceItem.data.description}
+                href={withBase(resource(resourceItem.slug))}
+                meta={resourceItem.data.type}
                 variant="resource"
               />
             ))
@@ -233,8 +234,8 @@ const websiteSchema = {
       strategy, let's design the next step.
     </p>
     <div class="actions">
-      <a class="button" href={withBase("/contact")}>Start a conversation</a>
-      <a class="button secondary" href={withBase("/courses")}>Explore all courses</a>
+      <a class="button" href={withBase(contact)}>Start a conversation</a>
+      <a class="button secondary" href={withBase(coursesRoute)}>Explore all courses</a>
     </div>
   </section>
 

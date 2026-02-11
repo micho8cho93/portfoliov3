@@ -1,0 +1,37 @@
+export const home = "/";
+export const blog = "/blog";
+export const projects = "/projects";
+export const courses = "/courses";
+export const resources = "/resources";
+export const contact = "/contact";
+export const rss = "/rss.xml";
+
+export const routeLabels = {
+  home: "Home",
+  blog: "Blog",
+  projects: "Projects",
+  courses: "Courses",
+  resources: "Resources",
+  contact: "Contact",
+  rss: "RSS",
+} as const;
+
+function normalizeSlug(slug: string): string {
+  return slug.replace(/^\/+|\/+$/g, "");
+}
+
+export function blogPost(slug: string): string {
+  return `${blog}/${normalizeSlug(slug)}`;
+}
+
+export function project(slug: string): string {
+  return `${projects}/${normalizeSlug(slug)}`;
+}
+
+export function course(slug: string): string {
+  return `${courses}/${normalizeSlug(slug)}`;
+}
+
+export function resource(slug: string): string {
+  return `${resources}/${normalizeSlug(slug)}`;
+}

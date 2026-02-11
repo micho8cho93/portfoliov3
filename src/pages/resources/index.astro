@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { resource as resourceRoute } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
@@ -19,12 +20,12 @@ const grouped = resources.reduce((acc, resource) => {
     <section>
       <h2>{type}</h2>
       <div class="grid">
-        {items.map((resource) => (
+        {items.map((resourceItem) => (
           <Card
-            title={resource.data.title}
-            description={resource.data.description}
-            href={withBase(`/resources/${resource.slug}`)}
-            meta={resource.data.type}
+            title={resourceItem.data.title}
+            description={resourceItem.data.description}
+            href={withBase(resourceRoute(resourceItem.slug))}
+            meta={resourceItem.data.type}
             variant="resource"
           />
         ))}

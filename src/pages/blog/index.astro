@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { blogPost, rss } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import TagList from '../../components/TagList.astro';
@@ -12,14 +13,14 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 
 <Layout title="Blog" description="Insights on teaching CS, curriculum, and pedagogy.">
   <h1>Blog</h1>
-  <p><a href={withBase("/rss.xml")}>Subscribe via RSS</a></p>
+  <p><a href={withBase(rss)}>Subscribe via RSS</a></p>
   <div class="stack">
     {posts.map((post) => (
       <article class="post-list-item">
         <Card
           title={post.data.title}
           description={post.data.description}
-          href={withBase(`/blog/${post.slug}`)}
+          href={withBase(blogPost(post.slug))}
           meta={post.data.pubDate.toLocaleDateString()}
           variant="post"
         />

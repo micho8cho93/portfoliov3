@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { resources } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import TagList from '../../components/TagList.astro';
 import { getCollection, render } from 'astro:content';
@@ -20,7 +21,7 @@ const buttonLabel = resource.data.url ? 'Open resource' : 'Download resource';
 ---
 
 <Layout title={`${resource.data.title} | Resources`} description={resource.data.description}>
-  <p><a href={withBase("/resources")}>← Back to resources</a></p>
+  <p><a href={withBase(resources)}>← Back to resources</a></p>
   <article>
     <h1>{resource.data.title}</h1>
     <p>{resource.data.description}</p>
