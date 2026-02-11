@@ -7,19 +7,15 @@ import { getCollection } from "astro:content";
 
 const courses = (await getCollection("courses"))
   .filter((item) => item.data.featured)
-  .slice(0, 3);
+  .slice(0, 2);
 const projects = (await getCollection("projects"))
   .sort(
     (a, b) =>
       Number(b.data.featured ?? false) - Number(a.data.featured ?? false) ||
       b.data.year - a.data.year,
   )
-  .slice(0, 3);
-const resources = (await getCollection("resources")).slice(0, 3);
-
-const [featuredCourse, ...courseRemainder] = courses;
-const [featuredProject, ...projectRemainder] = projects;
-const [featuredResource, ...resourceRemainder] = resources;
+  .slice(0, 2);
+const resources = (await getCollection("resources")).slice(0, 2);
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -46,7 +42,6 @@ const websiteSchema = {
   <section class="hero-manifesto" aria-labelledby="hero-title">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">Hero manifesto</p>
         <h1 id="hero-title" class="reveal-load reveal-load--headline">
           Helping students think like engineers, not just coders.
         </h1>
@@ -61,7 +56,6 @@ const websiteSchema = {
       </div>
 
       <aside class="signature-block" aria-label="Teaching thesis">
-        <p class="signature-label">Signature block</p>
         <blockquote>
           “Rigor belongs to every learner when we teach process, reflection, and
           iteration—not just syntax.”
@@ -76,126 +70,83 @@ const websiteSchema = {
   <section class="proof-practice" aria-labelledby="proof-title">
     <div class="proof-grid">
       <div>
-        <p class="eyebrow">Proof of practice</p>
         <h2 id="proof-title" class="section-heading">
           Courses, projects, and resources from the classroom floor
         </h2>
         <p class="measure">
-          A snapshot of what I run, build, and share for teachers. Each stream
-          highlights one flagship piece followed by quick-access supporting
-          items.
+          A snapshot of what I run, build, and share for teachers, grouped into
+          focused streams.
         </p>
       </div>
 
-      <div class="feature-panel">
-        <article class="featured-item">
-          <p class="label">Featured course</p>
-          {
-            featuredCourse ? (
-              <>
-                <h3>
-                  <a href={withBase(course(featuredCourse.slug))}>
-                    {featuredCourse.data.title}
-                  </a>
-                </h3>
-                <p>{featuredCourse.data.description}</p>
-                <p class="meta">
-                  {featuredCourse.data.level} · {featuredCourse.data.duration}
-                </p>
-              </>
-            ) : (
-              <p>Course showcase coming soon.</p>
-            )
-          }
-        </article>
+      <div class="proof-streams">
+        <section class="proof-stream" aria-labelledby="proof-courses-title">
+          <h3 id="proof-courses-title">Courses</h3>
+          <div class="compact-grid">
+            {
+              courses.length ? (
+                courses.map((courseItem) => (
+                  <Card
+                    title={courseItem.data.title}
+                    description={courseItem.data.description}
+                    href={withBase(course(courseItem.slug))}
+                    meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
+                    variant="course"
+                  />
+                ))
+              ) : (
+                <p>Course showcase coming soon.</p>
+              )
+            }
+          </div>
+        </section>
 
-        <div class="compact-grid">
-          {
-            courseRemainder.map((courseItem) => (
-              <Card
-                title={courseItem.data.title}
-                description={courseItem.data.description}
-                href={withBase(course(courseItem.slug))}
-                meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
-                variant="course"
-              />
-            ))
-          }
-        </div>
+        <section class="proof-stream" aria-labelledby="proof-projects-title">
+          <h3 id="proof-projects-title">Projects</h3>
+          <div class="compact-grid">
+            {
+              projects.length ? (
+                projects.map((projectItem) => (
+                  <Card
+                    title={projectItem.data.title}
+                    description={projectItem.data.description}
+                    href={withBase(project(projectItem.slug))}
+                    meta={`${projectItem.data.year} · ${projectItem.data.role}`}
+                    variant="project"
+                  />
+                ))
+              ) : (
+                <p>Project spotlight coming soon.</p>
+              )
+            }
+          </div>
+        </section>
 
-        <article class="featured-item">
-          <p class="label">Featured project</p>
-          {
-            featuredProject ? (
-              <>
-                <h3>
-                  <a href={withBase(project(featuredProject.slug))}>
-                    {featuredProject.data.title}
-                  </a>
-                </h3>
-                <p>{featuredProject.data.description}</p>
-                <p class="meta">
-                  {featuredProject.data.year} · {featuredProject.data.role}
-                </p>
-              </>
-            ) : (
-              <p>Project spotlight coming soon.</p>
-            )
-          }
-        </article>
-
-        <div class="compact-grid">
-          {
-            projectRemainder.map((projectItem) => (
-              <Card
-                title={projectItem.data.title}
-                description={projectItem.data.description}
-                href={withBase(project(projectItem.slug))}
-                meta={`${projectItem.data.year} · ${projectItem.data.role}`}
-                variant="project"
-              />
-            ))
-          }
-        </div>
-
-        <article class="featured-item">
-          <p class="label">Featured resource</p>
-          {
-            featuredResource ? (
-              <>
-                <h3>
-                  <a href={withBase(resource(featuredResource.slug))}>
-                    {featuredResource.data.title}
-                  </a>
-                </h3>
-                <p>{featuredResource.data.description}</p>
-                <p class="meta">{featuredResource.data.type}</p>
-              </>
-            ) : (
-              <p>Resource feature coming soon.</p>
-            )
-          }
-        </article>
-
-        <div class="compact-grid">
-          {
-            resourceRemainder.map((resourceItem) => (
-              <Card
-                title={resourceItem.data.title}
-                description={resourceItem.data.description}
-                href={withBase(resource(resourceItem.slug))}
-                meta={resourceItem.data.type}
-                variant="resource"
-              />
-            ))
-          }
-        </div>
+        <section class="proof-stream" aria-labelledby="proof-resources-title">
+          <h3 id="proof-resources-title">Resources</h3>
+          <div class="compact-grid">
+            {
+              resources.length ? (
+                resources.map((resourceItem) => (
+                  <Card
+                    title={resourceItem.data.title}
+                    description={resourceItem.data.description}
+                    href={withBase(resource(resourceItem.slug))}
+                    meta={resourceItem.data.type}
+                    variant="resource"
+                  />
+                ))
+              ) : (
+                <p>Resource feature coming soon.</p>
+              )
+            }
+          </div>
+        </section>
       </div>
     </div>
   </section>
 
   <section class="principles" aria-labelledby="principles-title">
-    <p class="eyebrow">Pedagogy principles</p>
     <h2 id="principles-title" class="section-heading">
       How I structure learning that lasts
     </h2>
@@ -225,7 +176,6 @@ const websiteSchema = {
   </section>
 
   <section class="conversion-band" aria-labelledby="conversion-title">
-    <p class="eyebrow">Conversion CTA band</p>
     <h2 id="conversion-title" class="section-heading">
       Bring this approach to your school or district
     </h2>
@@ -244,15 +194,6 @@ const websiteSchema = {
 </Layout>
 
 <style>
-  .eyebrow {
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent, #4f46e5);
-  }
-
   .hero-manifesto,
   .proof-practice,
   .principles,
@@ -306,14 +247,6 @@ const websiteSchema = {
     bottom: 0.15rem;
   }
 
-  .signature-label {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
   .signature-block blockquote {
     margin: 0.6rem 0;
     font-size: 1.1rem;
@@ -325,37 +258,21 @@ const websiteSchema = {
     font-size: 0.95rem;
   }
 
-  .feature-panel {
+  .proof-streams {
     display: grid;
     gap: 1rem;
     align-content: start;
   }
 
-  .featured-item {
+  .proof-stream {
     padding: 1rem;
     border: 1px solid #d8dee9;
     border-radius: 0.75rem;
     background: #f8fafc;
   }
 
-  .featured-item .label {
-    margin: 0;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: #475569;
-  }
-
-  .featured-item h3 {
-    margin: 0.4rem 0 0.35rem;
-    font-size: 1.22rem;
-  }
-
-  .featured-item .meta {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #475569;
+  .proof-stream h3 {
+    margin: 0 0 0.75rem;
   }
 
   .compact-grid {
@@ -394,7 +311,7 @@ const websiteSchema = {
       align-items: start;
     }
 
-    .feature-panel {
+    .proof-streams {
       margin-top: 1.25rem;
     }
 

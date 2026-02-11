@@ -133,19 +133,6 @@ a {
   align-items: center;
 }
 
-.nav-group-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  margin-left: var(--space-xs);
-}
-
-.nav-separator {
-  color: color-mix(in srgb, var(--ink-muted) 55%, transparent);
-  margin: 0 var(--space-xs);
-}
-
 .nav-link {
   position: relative;
   color: inherit;
@@ -671,11 +658,6 @@ pre {
   .nav {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .nav-group-label,
-  .nav-separator {
-    display: none;
   }
 
   .footer-grid {

@@ -13,26 +13,12 @@ import {
 
 const currentPathname = normalizePathname(stripBasePath(Astro.url.pathname));
 
-const navGroups = [
-  {
-    label: "Learn",
-    items: [
-      { route: courses, label: routeLabels.courses },
-      { route: resources, label: routeLabels.resources },
-    ],
-  },
-  {
-    label: "Read",
-    items: [{ route: blog, label: routeLabels.blog }],
-  },
-  {
-    label: "Build",
-    items: [{ route: projects, label: routeLabels.projects }],
-  },
-  {
-    label: "Connect",
-    items: [{ route: contact, label: routeLabels.contact }],
-  },
+const navItems = [
+  { route: courses, label: routeLabels.courses },
+  { route: resources, label: routeLabels.resources },
+  { route: blog, label: routeLabels.blog },
+  { route: projects, label: routeLabels.projects },
+  { route: contact, label: routeLabels.contact },
 ];
 ---
 
@@ -51,35 +37,21 @@ const navGroups = [
     </a>
 
     <ul>
-      {
-        navGroups.map((group, groupIndex) => (
-          <>
-            <li class="nav-group-label" aria-hidden="true">
-              {group.label}
-            </li>
-            {group.items.map((item) => {
-              const itemRoute = normalizePathname(item.route);
+      {navItems.map((item) => {
+        const itemRoute = normalizePathname(item.route);
 
-              return (
-                <li>
-                  <a
-                    class="nav-link"
-                    href={withBase(itemRoute)}
-                    aria-current={currentPathname === itemRoute ? "page" : undefined}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
-            {groupIndex !== navGroups.length - 1 && (
-              <li class="nav-separator" aria-hidden="true">
-                •
-              </li>
-            )}
-          </>
-        ))
-      }
+        return (
+          <li>
+            <a
+              class="nav-link"
+              href={withBase(itemRoute)}
+              aria-current={currentPathname === itemRoute ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </nav>
 </header>
