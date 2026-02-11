@@ -1,5 +1,15 @@
 ---
 import { withBase } from "../utils/withBase";
+import {
+  home,
+  courses,
+  blog,
+  projects,
+  contact,
+  rss,
+  routeLabels,
+} from "../lib/routes";
+
 const teachingFocusAreas = [
   "Web development foundations",
   "AP CSP + AP CSA support",
@@ -15,10 +25,10 @@ const featuredNow =
     <div class="footer-column">
       <h2 class="footer-heading">Quick links</h2>
       <ul>
-        <li><a href={withBase("/")}>Home</a></li>
-        <li><a href={withBase("/courses")}>Courses</a></li>
-        <li><a href={withBase("/blog")}>Blog</a></li>
-        <li><a href={withBase("/projects")}>Projects</a></li>
+        <li><a href={withBase(home)}>{routeLabels.home}</a></li>
+        <li><a href={withBase(courses)}>{routeLabels.courses}</a></li>
+        <li><a href={withBase(blog)}>{routeLabels.blog}</a></li>
+        <li><a href={withBase(projects)}>{routeLabels.projects}</a></li>
       </ul>
     </div>
 
@@ -32,8 +42,8 @@ const featuredNow =
     <div class="footer-column">
       <h2 class="footer-heading">Contact & social</h2>
       <ul>
-        <li><a href={withBase("/contact")}>Contact</a></li>
-        <li><a href={withBase("/rss.xml")}>RSS</a></li>
+        <li><a href={withBase(contact)}>{routeLabels.contact}</a></li>
+        <li><a href={withBase(rss)}>{routeLabels.rss}</a></li>
         <li><a href={withBase("/sitemap-index.xml")}>Sitemap</a></li>
       </ul>
     </div>

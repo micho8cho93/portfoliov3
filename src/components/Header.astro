@@ -1,6 +1,15 @@
 ---
 import { stripBasePath, normalizePathname } from "../utils/pathname";
 import { withBase } from "../utils/withBase";
+import {
+  home,
+  blog,
+  projects,
+  courses,
+  resources,
+  contact,
+  routeLabels,
+} from "../lib/routes";
 
 const currentPathname = normalizePathname(stripBasePath(Astro.url.pathname));
 
@@ -8,21 +17,21 @@ const navGroups = [
   {
     label: "Learn",
     items: [
-      { route: "/courses", label: "Courses" },
-      { route: "/resources", label: "Resources" },
+      { route: courses, label: routeLabels.courses },
+      { route: resources, label: routeLabels.resources },
     ],
   },
   {
     label: "Read",
-    items: [{ route: "/blog", label: "Blog" }],
+    items: [{ route: blog, label: routeLabels.blog }],
   },
   {
     label: "Build",
-    items: [{ route: "/projects", label: "Projects" }],
+    items: [{ route: projects, label: routeLabels.projects }],
   },
   {
     label: "Connect",
-    items: [{ route: "/contact", label: "Contact" }],
+    items: [{ route: contact, label: routeLabels.contact }],
   },
 ];
 ---
@@ -30,10 +39,10 @@ const navGroups = [
 <header class="site-header">
   <nav aria-label="Main navigation" class="container nav">
     <a
-      href={withBase("/")}
+      href={withBase(home)}
       class="brand"
       aria-label="CS Educator home"
-      aria-current={currentPathname === "/" ? "page" : undefined}
+      aria-current={currentPathname === home ? "page" : undefined}
     >
       <span class="brand-name">CS Educator</span>
       <span class="brand-tagline"

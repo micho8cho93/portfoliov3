@@ -1,5 +1,6 @@
 ---
 import { withBase } from "../../utils/withBase";
+import { blog, blogPost } from "../../lib/routes";
 import Layout from '../../components/Layout.astro';
 import TagList from '../../components/TagList.astro';
 import { getCollection, render } from 'astro:content';
@@ -42,7 +43,7 @@ const articleSchema = {
   modifiedTime={(post.data.updatedDate ?? post.data.pubDate).toISOString()}
 >
   <article>
-    <p><a href={withBase("/blog")}>← Back to blog</a></p>
+    <p><a href={withBase(blog)}>← Back to blog</a></p>
     <h1>{post.data.title}</h1>
     <p class="meta">
       Published {post.data.pubDate.toLocaleDateString()}
@@ -54,8 +55,8 @@ const articleSchema = {
   </article>
 
   <nav class="pagination" aria-label="Post navigation">
-    {newerPost && <a href={withBase(`/blog/${newerPost.slug}`)}>← {newerPost.data.title}</a>}
-    {olderPost && <a href={withBase(`/blog/${olderPost.slug}`)}>{olderPost.data.title} →</a>}
+    {newerPost && <a href={withBase(blogPost(newerPost.slug))}>← {newerPost.data.title}</a>}
+    {olderPost && <a href={withBase(blogPost(olderPost.slug))}>{olderPost.data.title} →</a>}
   </nav>
 
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
