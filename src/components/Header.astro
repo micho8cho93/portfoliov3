@@ -1,4 +1,6 @@
 ---
+import { withBase } from "../utils/withBase";
+
 const navGroups = [
   {
     label: "Learn",
@@ -24,7 +26,7 @@ const navGroups = [
 
 <header class="site-header">
   <nav aria-label="Main navigation" class="container nav">
-    <a href="/" class="brand" aria-label="CS Educator home">
+    <a href={withBase("/")} class="brand" aria-label="CS Educator home">
       <span class="brand-name">CS Educator</span>
       <span class="brand-tagline"
         >Computer science teaching & practical learning</span
@@ -42,9 +44,11 @@ const navGroups = [
               <li>
                 <a
                   class="nav-link"
-                  href={item.href}
+                  href={withBase(item.href)}
                   aria-current={
-                    Astro.url.pathname === item.href ? "page" : undefined
+                    Astro.url.pathname === withBase(item.href)
+                      ? "page"
+                      : undefined
                   }
                 >
                   {item.label}
