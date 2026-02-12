@@ -1,0 +1,35 @@
+---
+courseId: intro-to-linux
+moduleId: "03"
+moduleTitle: Mission 3 · Networking and Remote Access
+title: Network Recon Relay
+description: Diagnose a multi-step connectivity incident and retrieve the mission token.
+order: 6
+estimatedMinutes: 50
+objectives:
+  - Verify network reachability with `ping`.
+  - Trace packet paths with `traceroute` and inspect routing with `route`.
+  - Retrieve remote artifacts using `curl` and `wget`.
+  - Demonstrate secure connection syntax with `ssh`.
+updatedDate: 2026-02-12
+---
+
+import LinuxTerminal from '../../../../components/course/LinuxTerminal.astro';
+
+# Mission Brief
+
+Your service-monitoring team reports intermittent outage warnings. You must investigate connectivity, identify where requests fail, and retrieve a remote status token.
+
+## Challenge Type
+
+This is a **network troubleshooting scenario** where each command output gives evidence for the next action.
+
+## Terminal Mission
+
+<LinuxTerminal />
+
+## Success Criteria
+
+- You provide a short diagnosis of the likely failure point.
+- You retrieve the required token/content from a remote endpoint.
+- You justify which command confirmed each conclusion.

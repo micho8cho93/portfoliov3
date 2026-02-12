@@ -1,0 +1,48 @@
+---
+courseId: intro-to-linux
+moduleId: "03"
+moduleTitle: Mission 3 · Networking and Remote Access
+title: "Command Briefing: Network Recon Relay"
+description: Learn network diagnostics and remote-access commands before your connectivity challenge.
+order: 5
+estimatedMinutes: 30
+objectives:
+  - Understand host reachability and route tracing basics.
+  - Recognize how remote login and file retrieval commands are used.
+  - Interpret command output to isolate likely network faults.
+updatedDate: 2026-02-12
+---
+
+# What You Will Use in the Next Lesson
+
+This briefing introduces commands used for connectivity checks and remote interactions.
+
+## Command Set
+
+- `ping <host>`: tests basic reachability and latency.
+- `traceroute <host>`: shows network path hops.
+- `route`: displays kernel routing table.
+- `ssh user@host`: opens a secure remote shell session.
+- `curl <url>`: fetches web content or APIs from the terminal.
+- `wget <url>`: downloads files over HTTP/HTTPS.
+
+## Why These Commands Matter
+
+When something “doesn’t work,” Linux users must determine if the issue is local, routing-related, remote-host-related, or application-level. These commands create that diagnostic chain.
+
+## Challenge Preview
+
+The next page is a **network triage relay** in the emulator.
+
+You will:
+
+1. Validate connectivity with `ping`.
+2. Investigate path breaks with `traceroute` and `route`.
+3. Pull remote instructions with `curl`/`wget`.
+4. Simulate remote access decisions with `ssh` syntax.
+
+## What This Teaches
+
+- Practical troubleshooting flow for network incidents.
+- Differences between connectivity checks and content retrieval.
+- Foundational remote operations vocabulary.

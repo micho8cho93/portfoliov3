@@ -1,0 +1,35 @@
+---
+courseId: intro-to-linux
+moduleId: "04"
+moduleTitle: Mission 4 · System Insight and Search Mastery
+title: System Detective Gauntlet
+description: Complete an advanced terminal investigation using system, user, and search analysis commands.
+order: 8
+estimatedMinutes: 60
+objectives:
+  - Collect runtime and resource evidence with `top`, `df`, `du`, `free`, `uname`, and `uptime`.
+  - Identify user context with `who`, `whoami`, and `w`.
+  - Locate and filter targets using `find`, `locate`, and `grep`.
+  - Reconcile outputs with `sort` and `diff` to produce a final incident summary.
+updatedDate: 2026-02-12
+---
+
+import LinuxTerminal from '../../../../components/course/LinuxTerminal.astro';
+
+# Mission Brief
+
+You are the on-call investigator for a Linux server with suspicious behavior. Logs and clues are spread across multiple directories, and only a complete evidence trail unlocks the final code.
+
+## Challenge Type
+
+This is an **advanced forensic challenge**. You must prioritize command order, extract only relevant lines, and compare conflicting files before submitting your conclusion.
+
+## Terminal Mission
+
+<LinuxTerminal />
+
+## Success Criteria
+
+- You produce a concise incident summary from command output.
+- You identify the correct final code/flag.
+- You explain how at least one system command and one search command contributed to the answer.

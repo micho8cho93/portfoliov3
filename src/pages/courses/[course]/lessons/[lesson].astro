@@ -42,6 +42,7 @@ const lessonSlug = (entrySlug: string) => {
 
 const { course, lesson } = Astro.props;
 const currentLessonSlug = lessonSlug(lesson.slug);
+const showExperimentSections = course.data.courseId !== 'intro-to-linux';
 const tryIts = lesson.data.tryIts ?? [];
 const breakIts = lesson.data.breakIts ?? [];
 const fixIts = lesson.data.fixIts ?? [];
@@ -114,47 +115,51 @@ const { Content, headings } = await render(lesson);
     <Content components={{ Callout, Hint, SlideDeck }} />
   </section>
 
-  <details aria-labelledby="try-it-heading" class="lesson-section lesson-collapsible">
-    <summary class="collapsible-summary">
-      <span class="collapse-arrow" aria-hidden="true"></span>
-      <span id="try-it-heading" class="collapsible-title" role="heading" aria-level="2">Try It</span>
-    </summary>
-    <div class="collapsible-panel">
-      {tryIts.length > 0 ? (
-        tryIts.map((item, index) => <TryIt item={item} index={index + 1} />)
-      ) : (
-        <p>No Try It prompts for this lesson yet.</p>
-      )}
-    </div>
-  </details>
+  {showExperimentSections && (
+    <>
+      <details aria-labelledby="try-it-heading" class="lesson-section lesson-collapsible">
+        <summary class="collapsible-summary">
+          <span class="collapse-arrow" aria-hidden="true"></span>
+          <span id="try-it-heading" class="collapsible-title" role="heading" aria-level="2">Try It</span>
+        </summary>
+        <div class="collapsible-panel">
+          {tryIts.length > 0 ? (
+            tryIts.map((item, index) => <TryIt item={item} index={index + 1} />)
+          ) : (
+            <p>No Try It prompts for this lesson yet.</p>
+          )}
+        </div>
+      </details>
 
-  <details aria-labelledby="break-it-heading" class="lesson-section lesson-collapsible">
-    <summary class="collapsible-summary">
-      <span class="collapse-arrow" aria-hidden="true"></span>
-      <span id="break-it-heading" class="collapsible-title" role="heading" aria-level="2">Break It</span>
-    </summary>
-    <div class="collapsible-panel">
-      {breakIts.length > 0 ? (
-        breakIts.map((item, index) => <BreakIt item={item} index={index + 1} />)
-      ) : (
-        <p>No Break It examples for this lesson yet.</p>
-      )}
-    </div>
-  </details>
+      <details aria-labelledby="break-it-heading" class="lesson-section lesson-collapsible">
+        <summary class="collapsible-summary">
+          <span class="collapse-arrow" aria-hidden="true"></span>
+          <span id="break-it-heading" class="collapsible-title" role="heading" aria-level="2">Break It</span>
+        </summary>
+        <div class="collapsible-panel">
+          {breakIts.length > 0 ? (
+            breakIts.map((item, index) => <BreakIt item={item} index={index + 1} />)
+          ) : (
+            <p>No Break It examples for this lesson yet.</p>
+          )}
+        </div>
+      </details>
 
-  <details aria-labelledby="fix-it-heading" class="lesson-section lesson-collapsible">
-    <summary class="collapsible-summary">
-      <span class="collapse-arrow" aria-hidden="true"></span>
-      <span id="fix-it-heading" class="collapsible-title" role="heading" aria-level="2">Fix It</span>
-    </summary>
-    <div class="collapsible-panel">
-      {fixIts.length > 0 ? (
-        fixIts.map((item, index) => <FixIt item={item} index={index + 1} />)
-      ) : (
-        <p>No Fix It challenges for this lesson yet.</p>
-      )}
-    </div>
-  </details>
+      <details aria-labelledby="fix-it-heading" class="lesson-section lesson-collapsible">
+        <summary class="collapsible-summary">
+          <span class="collapse-arrow" aria-hidden="true"></span>
+          <span id="fix-it-heading" class="collapsible-title" role="heading" aria-level="2">Fix It</span>
+        </summary>
+        <div class="collapsible-panel">
+          {fixIts.length > 0 ? (
+            fixIts.map((item, index) => <FixIt item={item} index={index + 1} />)
+          ) : (
+            <p>No Fix It challenges for this lesson yet.</p>
+          )}
+        </div>
+      </details>
+    </>
+  )}
 
   <section aria-labelledby="quick-check-heading" class="lesson-section">
     <h2 id="quick-check-heading">Quick Check</h2>
