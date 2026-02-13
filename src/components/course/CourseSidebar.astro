@@ -60,22 +60,41 @@ const { courseSlug, modules, currentLessonSlug } = Astro.props;
     top: var(--space-md);
   }
 
-  summary {
+  .course-sidebar summary {
     cursor: pointer;
     font-weight: 600;
     margin-bottom: var(--space-sm);
+    list-style: none;
+    color: var(--text);
   }
 
-  h2 {
+  .course-sidebar summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .course-sidebar summary::before {
+    content: '▾';
+    color: var(--text);
+    display: inline-block;
+    margin-right: 0.4rem;
+    transform-origin: 50% 55%;
+    transition: transform 0.15s ease;
+  }
+
+  .course-sidebar details:not([open]) summary::before {
+    transform: rotate(-90deg);
+  }
+
+  .course-sidebar h2 {
     font-size: 1rem;
     margin-bottom: var(--space-xs);
   }
 
-  section + section {
+  .course-sidebar section + section {
     margin-top: var(--space-md);
   }
 
-  ol {
+  .course-sidebar ol {
     margin: 0;
     padding-left: 1.2rem;
   }
@@ -89,14 +108,6 @@ const { courseSlug, modules, currentLessonSlug } = Astro.props;
   @media (min-width: 56rem) {
     details {
       display: block;
-    }
-
-    summary {
-      list-style: none;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
     }
   }
 </style>
