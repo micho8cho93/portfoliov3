@@ -36,6 +36,13 @@ const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.d
     top: var(--space-md);
   }
 
+  @media (max-width: 56rem) {
+    .course-toc {
+      position: static;
+      top: auto;
+    }
+  }
+
   .course-toc h2 {
     font-size: 1rem;
     margin-bottom: var(--space-sm);
