@@ -110,4 +110,18 @@ const { courseSlug, modules, currentLessonSlug } = Astro.props;
       display: block;
     }
   }
+
+  @media (max-width: 56rem) {
+    .course-sidebar {
+      position: fixed;
+      top: var(--space-sm);
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(72rem, 92vw);
+      z-index: 25;
+      max-height: 45vh;
+      overflow: auto;
+      box-shadow: var(--shadow-soft);
+    }
+  }
 </style>
