@@ -1,0 +1,87 @@
+---
+courseId: the-internet-layers-components
+moduleId: "03"
+moduleTitle: Module 3 · Network Layer
+title: Network Layer
+description: Learn how IP forwards packets hop by hop across different networks.
+order: 3
+estimatedMinutes: 35
+objectives:
+  - Explain IP addressing as a routing destination label.
+  - Describe hop-by-hop forwarding across routers.
+  - Explain how rerouting can still reach the same destination.
+tryIts:
+  - title: Plan a packet route
+    prompt: Write a possible hop sequence from school laptop to remote server.
+    starterCode: |
+      Source: school laptop
+      Hop 1: ____________________
+      Hop 2: ____________________
+      Hop 3: ____________________
+      Destination: cloud server
+    expectedOutput: |
+      Example:
+      Hop 1: school router
+      Hop 2: city ISP router
+      Hop 3: regional backbone router
+    tags:
+      - ip
+      - routing
+breakIts:
+  - title: Wrong destination address
+    prompt: Explain what happens when a packet has the wrong destination IP.
+    starterCode: |
+      packet = {"dest_ip": "203.0.113.99", "data": "request"}
+      print("Forwarding to", packet["dest_ip"])
+    expectedOutput: |
+      Routers forward to the wrong endpoint path, so the intended host never receives the packet.
+    hints:
+      - Routers use destination IP fields.
+      - Forwarding decisions are address based, not app-name based.
+fixIts:
+  - title: Repair hop decision
+    prompt: Route packets to next hop by destination prefix.
+    starterCode: |
+      routes = {"10.": "Router-A", "172.": "Router-B"}
+      dest = "192.168.1.4"
+      next_hop = routes.get(dest[:3], "DROP")
+      print(next_hop)
+    solutionCode: |
+      routes = {"10.": "Router-A", "172.": "Router-B", "192.": "Router-C"}
+      dest = "192.168.1.4"
+      next_hop = routes.get(dest[:4], "DROP")
+      print(next_hop)
+    expectedOutput: |
+      Router-C
+checks:
+  - label: IP label check
+    type: concept
+    criteria: Explain what piece of information routers inspect to choose the next hop.
+  - label: Hop flow check
+    type: output
+    criteria: Describe what the term hop means in packet forwarding.
+  - label: Reroute check
+    type: concept
+    criteria: Explain how packets can still arrive when one route path is congested or unavailable.
+updatedDate: 2026-02-14
+---
+
+import InternetLayerVisual from '../../../../components/course/InternetLayerVisual.astro';
+
+# Network Layer
+
+The network layer moves packets between networks, deciding where each packet goes next on its trip.
+
+<InternetLayerVisual layer="network" analogyLabel="Postal routing across cities by destination address." />
+
+## Real-World Analogy
+
+Think of a postal system across many cities. Workers read destination addresses and pass each package to the next center until it reaches the target city.
+
+## Components In This Layer (From the PDF Definitions)
+
+- `IP`: Provides addressing and forwarding rules so routers can send packets hop by hop across interconnected networks.
+
+## What The Loop Visual Shows
+
+The node graph represents routers. A highlighted packet marker moves from node to node while the graph rotates, showing continuous forwarding and possible reroutes.

@@ -1,0 +1,89 @@
+---
+courseId: the-internet-layers-components
+moduleId: "02"
+moduleTitle: Module 2 · Transport Layer
+title: Transport Layer
+description: Compare TCP and UDP delivery behavior using reliability vs speed tradeoffs.
+order: 2
+estimatedMinutes: 35
+objectives:
+  - Compare TCP and UDP based on confirmation, ordering, and speed.
+  - Explain why some apps choose reliable delivery and others choose faster delivery.
+  - Describe acknowledgments and retransmission in transport workflows.
+tryIts:
+  - title: Choose a transport mode
+    prompt: Pick TCP or UDP for each case and justify the choice.
+    starterCode: |
+      1) Sending a bank transaction: __________
+      2) Live game position updates: __________
+      3) Downloading a homework PDF: __________
+    expectedOutput: |
+      Example:
+      1) TCP (must arrive correctly)
+      2) UDP (speed is higher priority)
+      3) TCP (complete ordered delivery)
+    tags:
+      - tcp
+      - udp
+breakIts:
+  - title: Out-of-order packet confusion
+    prompt: Explain why this flow can fail if data arrives in random order.
+    starterCode: |
+      packets = ["part3", "part1", "part2"]
+      full_message = "".join(packets)
+      print(full_message)
+    expectedOutput: |
+      Without ordering logic, the reassembled message is wrong. TCP sequencing fixes this.
+    hints:
+      - Order matters for files and long messages.
+      - Delivery guarantees differ between TCP and UDP.
+fixIts:
+  - title: Add acknowledgment logic
+    prompt: Repair the pseudocode so the sender retries missing packet 2.
+    starterCode: |
+      sent = [1, 2, 3]
+      acked = [1, 3]
+      print("Delivered:", sent)
+    solutionCode: |
+      sent = [1, 2, 3]
+      acked = [1, 3]
+      missing = [packet for packet in sent if packet not in acked]
+      print("Resend:", missing)
+    expectedOutput: |
+      Resend: [2]
+checks:
+  - label: TCP definition check
+    type: concept
+    criteria: Explain why TCP is often compared to registered mail.
+  - label: UDP definition check
+    type: concept
+    criteria: Describe one situation where UDP is preferred despite possible loss.
+  - label: ACK behavior check
+    type: output
+    criteria: State what happens in TCP when an expected acknowledgment does not arrive.
+updatedDate: 2026-02-14
+---
+
+import InternetLayerVisual from '../../../../components/course/InternetLayerVisual.astro';
+
+# Transport Layer
+
+The transport layer decides how data chunks move between endpoints: carefully confirmed or quickly sent.
+
+<InternetLayerVisual layer="transport" analogyLabel="Registered mail lane vs postcard lane." />
+
+## Real-World Analogy
+
+Think of two delivery lanes:
+
+- `TCP` is registered mail: numbered parcels, receipts, and resend when one is missing.
+- `UDP` is postcards: fast to send, but no guarantee every card arrives.
+
+## Components In This Layer (From the PDF Definitions)
+
+- `TCP`: Connection-oriented delivery with ordering, reliability, and acknowledgments.
+- `UDP`: Connectionless delivery with low overhead and no delivery confirmation.
+
+## What The Loop Visual Shows
+
+The top conveyor lane is TCP with ACK and resend indicators. The lower lane is UDP, where packets burst quickly with no confirmation stage.

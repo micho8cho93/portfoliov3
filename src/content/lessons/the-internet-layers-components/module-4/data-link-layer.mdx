@@ -1,0 +1,84 @@
+---
+courseId: the-internet-layers-components
+moduleId: "04"
+moduleTitle: Module 4 · Data Link Layer
+title: Data Link Layer
+description: Learn how frames support local network delivery between nearby devices.
+order: 4
+estimatedMinutes: 35
+objectives:
+  - Define a frame as a local delivery unit on a link.
+  - Explain how local switching chooses the right nearby destination.
+  - Distinguish local frame delivery from end-to-end internet routing.
+tryIts:
+  - title: Match frame to local destination
+    prompt: Decide which local unit receives each frame label.
+    starterCode: |
+      Frame 1 -> Unit B
+      Frame 2 -> Unit A
+      Frame 3 -> Unit C
+      Explain how the switch decides: ____________________
+    expectedOutput: |
+      The switch reads local destination labels and forwards each frame to the matching local port.
+    tags:
+      - frames
+      - local-network
+breakIts:
+  - title: Broadcast every frame everywhere
+    prompt: Identify the problem with sending every frame to all units.
+    starterCode: |
+      local_units = ["A", "B", "C"]
+      frame_target = "B"
+      for unit in local_units:
+          print("Send frame to", unit)
+    expectedOutput: |
+      This creates unnecessary traffic and privacy risk. Local switching should send only to the correct destination.
+    hints:
+      - Local delivery should be targeted.
+      - Flooding is noisy and inefficient for normal traffic.
+fixIts:
+  - title: Forward only to correct local port
+    prompt: Repair the logic to send the frame to one destination.
+    starterCode: |
+      local_units = {"A": 1, "B": 2, "C": 3}
+      frame_target = "B"
+      for unit in local_units:
+          print("Send frame to port", local_units[unit])
+    solutionCode: |
+      local_units = {"A": 1, "B": 2, "C": 3}
+      frame_target = "B"
+      print("Send frame to port", local_units[frame_target])
+    expectedOutput: |
+      Send frame to port 2
+checks:
+  - label: Frame definition check
+    type: concept
+    criteria: Explain what a frame is and where it is used.
+  - label: Local scope check
+    type: concept
+    criteria: Describe why data-link behavior is local instead of internet-wide.
+  - label: Switch behavior check
+    type: output
+    criteria: State what a switch should do when it knows the destination is on one specific port.
+updatedDate: 2026-02-14
+---
+
+import InternetLayerVisual from '../../../../components/course/InternetLayerVisual.astro';
+
+# Data Link Layer
+
+The data link layer handles local delivery on one network segment using frames and switching behavior.
+
+<InternetLayerVisual layer="data-link" analogyLabel="Apartment mailroom sorting framed packages to local units." />
+
+## Real-World Analogy
+
+Imagine an apartment mailroom. Each package has a local unit label, and the mailroom clerk routes it to the right mailbox in the same building.
+
+## Components In This Layer (From the PDF Definitions)
+
+- `Frames`: Structured local-delivery units that carry data and local addressing details for one network link.
+
+## What The Loop Visual Shows
+
+Frame cards travel through a switch-like hub and then branch to specific local devices, repeating the local sorting cycle.

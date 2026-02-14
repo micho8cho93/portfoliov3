@@ -1,0 +1,90 @@
+---
+courseId: the-internet-layers-components
+moduleId: "05"
+moduleTitle: Module 5 · Physical Layer
+title: Physical Layer
+description: Explore how bits travel through fiber, copper, and wireless media.
+order: 5
+estimatedMinutes: 35
+objectives:
+  - "Identify the three physical media in this course: fiber, copper, and wireless."
+  - Explain that the same bits can travel over different physical signals.
+  - Compare how medium choice affects speed, distance, and interference risk.
+tryIts:
+  - title: Match medium to signal style
+    prompt: Pair each medium with the signal form that carries bits.
+    starterCode: |
+      Fiber -> ____________________
+      Copper -> ____________________
+      Wireless -> ____________________
+    expectedOutput: |
+      Fiber -> light pulses
+      Copper -> electrical changes
+      Wireless -> radio waves
+    tags:
+      - fiber
+      - copper
+      - wireless
+breakIts:
+  - title: Treat all media as identical
+    prompt: Explain why this assumption causes design mistakes.
+    starterCode: |
+      medium = ["fiber", "copper", "wireless"]
+      for m in medium:
+          print(m, "supports exactly the same distance and noise profile")
+    expectedOutput: |
+      Media differ in distance, interference, and capacity; network designs must account for those differences.
+    hints:
+      - Wireless is flexible but sensitive to environment.
+      - Fiber often supports high capacity over long distance.
+fixIts:
+  - title: Choose medium by context
+    prompt: Update the mapping so each location uses a practical medium.
+    starterCode: |
+      location = {"backbone": "copper", "desk": "wireless", "hallway_ap": "fiber"}
+      print(location)
+    solutionCode: |
+      location = {"backbone": "fiber", "desk": "copper", "hallway_ap": "wireless"}
+      print(location)
+    expectedOutput: |
+      {'backbone': 'fiber', 'desk': 'copper', 'hallway_ap': 'wireless'}
+checks:
+  - label: Fiber check
+    type: concept
+    criteria: Describe what carries bits in fiber links.
+  - label: Copper check
+    type: concept
+    criteria: Explain what physical signal form carries bits in copper cabling.
+  - label: Wireless check
+    type: output
+    criteria: State one reason wireless links may fluctuate more than wired links.
+updatedDate: 2026-02-14
+---
+
+import InternetLayerVisual from '../../../../components/course/InternetLayerVisual.astro';
+
+# Physical Layer
+
+The physical layer is the actual path where raw bit signals travel through material media.
+
+<InternetLayerVisual layer="physical" analogyLabel="Roads, tunnels, and air lanes carrying the same cargo bits." />
+
+## Real-World Analogy
+
+Imagine one cargo type moving through three channels:
+
+- Road lanes
+- Tunnel lanes
+- Air lanes
+
+The package is the same, but the travel method changes by channel.
+
+## Components In This Layer (From the PDF Definitions)
+
+- `Fiber`: Bit signals carried as light pulses.
+- `Copper`: Bit signals carried as electrical changes.
+- `Wireless`: Bit signals carried as radio wave patterns.
+
+## What The Loop Visual Shows
+
+Three synchronized lanes animate signal pulses, showing how one bit stream can be represented as light, electrical pulses, or radio transmissions.

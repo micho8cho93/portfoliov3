@@ -1,0 +1,1277 @@
+---
+interface Props {
+  layer: 'application' | 'transport' | 'network' | 'data-link' | 'physical';
+  analogyLabel?: string;
+  height?: string;
+}
+
+const { layer, analogyLabel, height } = Astro.props;
+
+const layerTitle: Record<Props['layer'], string> = {
+  application: 'Application Layer',
+  transport: 'Transport Layer',
+  network: 'Network Layer',
+  'data-link': 'Data Link Layer',
+  physical: 'Physical Layer'
+};
+
+const defaultAnalogy: Record<Props['layer'], string> = {
+  application: 'Restaurant front desk: names, orders, and private envelopes.',
+  transport: 'Registered mail lane vs postcard lane.',
+  network: 'Postal routes across cities using destination addresses.',
+  'data-link': 'Apartment mailroom sorting frames to local units.',
+  physical: 'Roads, tunnels, and air lanes carrying the same cargo.'
+};
+---
+
+<figure
+  class={`internet-layer-visual internet-layer-visual--${layer}`}
+  style={`--internet-layer-visual-height: ${height ?? 'min(22rem, 65vw)'}`}
+  data-internet-layer-visual
+  data-layer={layer}
+>
+  <figcaption class="internet-layer-visual__caption">{analogyLabel ?? defaultAnalogy[layer]}</figcaption>
+  <div class={`internet-layer-visual__stage scene-${layer}`} role="img" aria-label={`${layerTitle[layer]} animated visual`}>
+    {layer === 'application' && (
+      <div class="scene scene-application" aria-hidden="true">
+        <div class="app-card app-card--browser">
+          <p class="card-title">Browser</p>
+          <p class="card-copy">GET /menu</p>
+        </div>
+        <div class="app-card app-card--server">
+          <p class="card-title">Server</p>
+          <p class="card-copy">200 + page</p>
+        </div>
+        <div class="dns-chip">
+          <span class="dns-face dns-face--name">eatery.example</span>
+          <span class="dns-face dns-face--ip">198.51.100.24</span>
+        </div>
+        <div class="tls-lock">
+          <span class="tls-lock__shackle"></span>
+          <span class="tls-lock__body"></span>
+        </div>
+        <span class="app-packet app-packet--forward app-packet--one"></span>
+        <span class="app-packet app-packet--forward app-packet--two"></span>
+        <span class="app-packet app-packet--back app-packet--three"></span>
+      </div>
+    )}
+
+    {layer === 'transport' && (
+      <div class="scene scene-transport" aria-hidden="true">
+        <div class="transport-lane transport-lane--tcp">
+          <p class="lane-label">TCP lane · ordered + ACK</p>
+          <span class="transport-packet transport-packet--tcp transport-packet--one">1</span>
+          <span class="transport-packet transport-packet--tcp transport-packet--two">2</span>
+          <span class="transport-packet transport-packet--tcp transport-packet--three">3</span>
+          <span class="transport-note transport-note--ack">ACK</span>
+          <span class="transport-note transport-note--resend">resend</span>
+        </div>
+        <div class="transport-lane transport-lane--udp">
+          <p class="lane-label">UDP lane · fast burst</p>
+          <span class="transport-packet transport-packet--udp transport-packet--one">A</span>
+          <span class="transport-packet transport-packet--udp transport-packet--two">B</span>
+          <span class="transport-packet transport-packet--udp transport-packet--three">C</span>
+          <span class="transport-packet transport-packet--udp transport-packet--four">D</span>
+          <span class="transport-note transport-note--fast">no confirm</span>
+        </div>
+      </div>
+    )}
+
+    {layer === 'network' && (
+      <div class="scene scene-network">
+        <canvas class="network-canvas" data-network-canvas aria-hidden="true"></canvas>
+        <div class="network-fallback" aria-hidden="true">
+          <span class="fallback-node node-a"></span>
+          <span class="fallback-node node-b"></span>
+          <span class="fallback-node node-c"></span>
+          <span class="fallback-node node-d"></span>
+          <span class="fallback-node node-e"></span>
+          <span class="fallback-packet"></span>
+        </div>
+        <p class="network-label">IP routing hops and dynamic reroute loop</p>
+      </div>
+    )}
+
+    {layer === 'data-link' && (
+      <div class="scene scene-data-link" aria-hidden="true">
+        <div class="switch-core">
+          <p class="switch-title">Switch / Mailroom</p>
+          <p class="switch-copy">Sort by local address</p>
+        </div>
+        <div class="local-device local-device--a">Unit A</div>
+        <div class="local-device local-device--b">Unit B</div>
+        <div class="local-device local-device--c">Unit C</div>
+        <span class="frame-card frame-card--a">Frame A</span>
+        <span class="frame-card frame-card--b">Frame B</span>
+        <span class="frame-card frame-card--c">Frame C</span>
+      </div>
+    )}
+
+    {layer === 'physical' && (
+      <div class="scene scene-physical" aria-hidden="true">
+        <div class="medium-lane medium-lane--fiber">
+          <p class="medium-label">Fiber / light</p>
+          <span class="signal signal--one"></span>
+          <span class="signal signal--two"></span>
+        </div>
+        <div class="medium-lane medium-lane--copper">
+          <p class="medium-label">Copper / electrical</p>
+          <span class="signal signal--one"></span>
+          <span class="signal signal--two"></span>
+        </div>
+        <div class="medium-lane medium-lane--wireless">
+          <p class="medium-label">Wireless / radio</p>
+          <span class="signal signal--one"></span>
+          <span class="signal signal--two"></span>
+          <span class="wireless-wave wave--one"></span>
+          <span class="wireless-wave wave--two"></span>
+        </div>
+      </div>
+    )}
+  </div>
+</figure>
+
+<script>
+  // @ts-nocheck
+  const visualStateKey = '__internetLayerVisualState';
+  const globalScope = window;
+
+  if (!globalScope[visualStateKey]) {
+    globalScope[visualStateKey] = {
+      bootstrapped: false,
+      initializedFigures: new WeakSet()
+    };
+  }
+
+  const state = globalScope[visualStateKey];
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const initNetworkScene = async (figure, reducedMotion) => {
+    if (figure.dataset.networkReady === 'true') {
+      return;
+    }
+
+    const canvas = figure.querySelector('[data-network-canvas]');
+    const stage = figure.querySelector('.internet-layer-visual__stage');
+
+    if (!(canvas instanceof HTMLCanvasElement) || !(stage instanceof HTMLElement)) {
+      return;
+    }
+
+    try {
+      const THREE = await import('three');
+      const {
+        AmbientLight,
+        BufferGeometry,
+        Color,
+        DirectionalLight,
+        Group,
+        Line,
+        LineBasicMaterial,
+        Mesh,
+        MeshStandardMaterial,
+        PerspectiveCamera,
+        Scene,
+        SphereGeometry,
+        Vector3,
+        WebGLRenderer
+      } = THREE;
+
+      const scene = new Scene();
+      scene.background = new Color(0x000000);
+      scene.background.convertSRGBToLinear();
+      scene.background.multiplyScalar(0.05);
+
+      const camera = new PerspectiveCamera(48, 1, 0.1, 100);
+      camera.position.set(0, 0.2, 5.8);
+
+      const renderer = new WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const graph = new Group();
+      scene.add(graph);
+
+      scene.add(new AmbientLight(0xffffff, 0.5));
+      const keyLight = new DirectionalLight(0x6ee7b7, 0.9);
+      keyLight.position.set(2.8, 2.4, 3.2);
+      scene.add(keyLight);
+
+      const nodeCoordinates = [
+        new Vector3(-2.1, 0.65, -0.8),
+        new Vector3(-1.05, -0.6, 0.25),
+        new Vector3(0.25, 0.85, 0.45),
+        new Vector3(1.35, -0.35, -0.7),
+        new Vector3(2.2, 0.65, 0.45),
+        new Vector3(0.05, -1.05, 0.9)
+      ];
+
+      const nodeGeometry = new SphereGeometry(0.14, 16, 16);
+      const nodeMaterial = new MeshStandardMaterial({
+        color: 0x7dd3fc,
+        emissive: 0x0f3e5f,
+        metalness: 0.12,
+        roughness: 0.38
+      });
+
+      nodeCoordinates.forEach((position) => {
+        const node = new Mesh(nodeGeometry, nodeMaterial);
+        node.position.copy(position);
+        graph.add(node);
+      });
+
+      const connections = [
+        [0, 1],
+        [1, 2],
+        [2, 4],
+        [1, 5],
+        [5, 3],
+        [3, 4],
+        [2, 3],
+        [0, 5]
+      ];
+
+      connections.forEach(([startIndex, endIndex]) => {
+        const lineGeometry = new BufferGeometry().setFromPoints([
+          nodeCoordinates[startIndex],
+          nodeCoordinates[endIndex]
+        ]);
+        const line = new Line(
+          lineGeometry,
+          new LineBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.72 })
+        );
+        graph.add(line);
+      });
+
+      const packet = new Mesh(
+        new SphereGeometry(0.1, 16, 16),
+        new MeshStandardMaterial({
+          color: 0xfde68a,
+          emissive: 0x8a5a00,
+          emissiveIntensity: 0.6
+        })
+      );
+      graph.add(packet);
+
+      const route = [0, 1, 5, 3, 4, 2, 1, 0];
+      const routeVectors = route.map((index) => nodeCoordinates[index]);
+
+      const updateSize = () => {
+        const width = stage.clientWidth || 640;
+        const height = stage.clientHeight || 360;
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      };
+
+      updateSize();
+
+      const resizeObserver = new ResizeObserver(updateSize);
+      resizeObserver.observe(stage);
+
+      let rafId = 0;
+      let progress = 0;
+
+      const interpolateRoute = (value) => {
+        const segmentCount = routeVectors.length - 1;
+        const segmentProgress = value * segmentCount;
+        const segmentIndex = Math.floor(segmentProgress);
+        const localProgress = segmentProgress - segmentIndex;
+        const start = routeVectors[segmentIndex];
+        const end = routeVectors[segmentIndex + 1];
+
+        return new Vector3(
+          start.x + (end.x - start.x) * localProgress,
+          start.y + (end.y - start.y) * localProgress,
+          start.z + (end.z - start.z) * localProgress
+        );
+      };
+
+      const drawFrame = () => {
+        progress = (progress + 0.0025) % 1;
+        packet.position.copy(interpolateRoute(progress));
+        graph.rotation.y += 0.0032;
+        graph.rotation.x = Math.sin(progress * Math.PI * 2) * 0.09;
+        renderer.render(scene, camera);
+      };
+
+      const animate = () => {
+        drawFrame();
+        rafId = window.requestAnimationFrame(animate);
+      };
+
+      if (reducedMotion) {
+        drawFrame();
+      } else {
+        animate();
+      }
+
+      const cleanup = () => {
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+        }
+        resizeObserver.disconnect();
+        renderer.dispose();
+        nodeGeometry.dispose();
+        nodeMaterial.dispose();
+      };
+
+      window.addEventListener(
+        'pagehide',
+        () => {
+          cleanup();
+        },
+        { once: true }
+      );
+
+      figure.dataset.networkReady = 'true';
+      figure.classList.add('network-webgl-ready');
+    } catch (error) {
+      console.warn('Internet layer network visual fallback:', error);
+    }
+  };
+
+  const initFigure = async (figure) => {
+    if (!(figure instanceof HTMLElement) || state.initializedFigures.has(figure)) {
+      return;
+    }
+
+    state.initializedFigures.add(figure);
+
+    if (figure.dataset.layer === 'network') {
+      await initNetworkScene(figure, reducedMotionQuery.matches);
+    }
+  };
+
+  const initAllFigures = () => {
+    const figures = document.querySelectorAll('[data-internet-layer-visual]');
+    figures.forEach((figure) => {
+      void initFigure(figure);
+    });
+  };
+
+  if (!state.bootstrapped) {
+    state.bootstrapped = true;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllFigures, { once: true });
+    } else {
+      initAllFigures();
+    }
+  } else {
+    initAllFigures();
+  }
+</script>
+
+<style>
+  .internet-layer-visual {
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  .internet-layer-visual__caption {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.84rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .internet-layer-visual__stage {
+    position: relative;
+    height: var(--internet-layer-visual-height);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--line) 70%, var(--accent-2));
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 8% 20%, color-mix(in srgb, var(--accent-1) 24%, transparent), transparent 42%),
+      radial-gradient(circle at 88% 85%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 50%),
+      linear-gradient(160deg, color-mix(in srgb, var(--bg-elevated) 88%, #e8f4ff), var(--bg-elevated));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line) 45%, transparent);
+    isolation: isolate;
+    perspective: 1200px;
+  }
+
+  .scene {
+    position: absolute;
+    inset: 0;
+    padding: clamp(0.8rem, 2vw, 1.2rem);
+  }
+
+  .scene-application .app-card {
+    position: absolute;
+    width: clamp(8.6rem, 24%, 11rem);
+    border-radius: 0.8rem;
+    padding: 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--line) 72%, var(--accent-1));
+    background: color-mix(in srgb, var(--bg-elevated) 86%, #ffffff);
+    box-shadow:
+      0 14px 24px rgb(5 17 42 / 14%),
+      inset 0 0 0 1px color-mix(in srgb, var(--accent-1) 24%, transparent);
+    transform-style: preserve-3d;
+  }
+
+  .scene-application .app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0.4rem;
+    border-radius: 0.55rem;
+    border: 1px dashed color-mix(in srgb, var(--accent-2) 36%, transparent);
+    transform: translateZ(-8px);
+  }
+
+  .app-card--browser {
+    top: 23%;
+    left: 6%;
+    transform: rotateY(10deg) rotateX(6deg);
+    animation: card-sway-browser 7s ease-in-out infinite;
+  }
+
+  .app-card--server {
+    top: 18%;
+    right: 6%;
+    transform: rotateY(-10deg) rotateX(5deg);
+    animation: card-sway-server 7s ease-in-out infinite;
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .card-copy {
+    margin: 0.45rem 0 0;
+    font-size: 0.82rem;
+    color: var(--ink-primary);
+  }
+
+  .dns-chip {
+    position: absolute;
+    left: 50%;
+    bottom: 8%;
+    width: min(16.5rem, 66%);
+    height: 2.45rem;
+    transform: translateX(-50%);
+    transform-style: preserve-3d;
+  }
+
+  .dns-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent-2) 45%, var(--line));
+    background: color-mix(in srgb, var(--bg-elevated) 83%, #ffffff);
+    display: grid;
+    place-items: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    backface-visibility: hidden;
+  }
+
+  .dns-face--name {
+    color: var(--accent-2);
+    animation: dns-face-name 5.2s ease-in-out infinite;
+  }
+
+  .dns-face--ip {
+    color: var(--accent-1);
+    transform: rotateX(180deg);
+    animation: dns-face-ip 5.2s ease-in-out infinite;
+  }
+
+  .tls-lock {
+    position: absolute;
+    left: 50%;
+    top: 14%;
+    width: 3.2rem;
+    height: 3.4rem;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent-1) 48%, transparent));
+    animation: tls-glow 2.9s ease-in-out infinite;
+  }
+
+  .tls-lock__body {
+    position: absolute;
+    left: 0.35rem;
+    right: 0.35rem;
+    bottom: 0.2rem;
+    height: 2.2rem;
+    border-radius: 0.55rem;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-1) 70%, #ffffff), var(--accent-1));
+    border: 1px solid color-mix(in srgb, var(--accent-1) 64%, #064e3b);
+  }
+
+  .tls-lock__shackle {
+    position: absolute;
+    left: 0.92rem;
+    right: 0.92rem;
+    top: 0.05rem;
+    height: 1.3rem;
+    border: 0.32rem solid color-mix(in srgb, var(--accent-1) 72%, #ffffff);
+    border-bottom: 0;
+    border-radius: 999px 999px 0 0;
+  }
+
+  .app-packet {
+    position: absolute;
+    top: 48%;
+    width: 0.78rem;
+    height: 0.78rem;
+    border-radius: 0.2rem;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 70%);
+  }
+
+  .app-packet--forward {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    animation: app-packet-forward 3.2s linear infinite;
+  }
+
+  .app-packet--back {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    animation: app-packet-back 3.2s linear infinite;
+  }
+
+  .app-packet--two {
+    animation-delay: 1.1s;
+  }
+
+  .app-packet--three {
+    animation-delay: 0.8s;
+  }
+
+  .scene-transport {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.95rem;
+  }
+
+  .transport-lane {
+    position: relative;
+    border-radius: 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--line) 74%, var(--accent-2));
+    background:
+      linear-gradient(180deg, color-mix(in srgb, #f8fafc 84%, transparent), color-mix(in srgb, #dbeafe 14%, transparent)),
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--ink-primary) 6%, transparent) 0 26px,
+        transparent 26px 38px
+      );
+    transform: rotateX(15deg);
+    transform-origin: center;
+    overflow: hidden;
+    box-shadow: 0 18px 24px rgb(15 23 42 / 10%);
+  }
+
+  .transport-lane--udp {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, #ecfeff 86%, transparent), color-mix(in srgb, #bae6fd 15%, transparent)),
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--ink-primary) 6%, transparent) 0 20px,
+        transparent 20px 32px
+      );
+  }
+
+  .lane-label {
+    margin: 0;
+    position: absolute;
+    left: 0.75rem;
+    top: 0.45rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 700;
+  }
+
+  .transport-packet {
+    position: absolute;
+    top: 2.5rem;
+    left: -12%;
+    width: 1.4rem;
+    height: 0.86rem;
+    border-radius: 0.24rem;
+    display: grid;
+    place-items: center;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .transport-packet--tcp {
+    background: linear-gradient(135deg, #fde68a, #f59e0b);
+    animation: packet-lane-move 4.3s linear infinite;
+  }
+
+  .transport-packet--udp {
+    background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+    animation: packet-lane-move 2.5s linear infinite;
+  }
+
+  .transport-lane--udp .transport-packet--one {
+    top: 2.35rem;
+  }
+
+  .transport-lane--udp .transport-packet--two {
+    top: 2.1rem;
+  }
+
+  .transport-lane--udp .transport-packet--three {
+    top: 2.55rem;
+  }
+
+  .transport-lane--udp .transport-packet--four {
+    top: 1.9rem;
+  }
+
+  .transport-packet--two {
+    animation-delay: 1.1s;
+  }
+
+  .transport-packet--three {
+    animation-delay: 2s;
+  }
+
+  .transport-packet--four {
+    animation-delay: 1.5s;
+  }
+
+  .transport-note {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink-primary);
+    padding: 0.2rem 0.45rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg-elevated) 80%, #ffffff);
+    border: 1px solid color-mix(in srgb, var(--line) 68%, var(--accent-2));
+  }
+
+  .transport-note--ack {
+    animation: note-pulse 2.8s ease-in-out infinite;
+  }
+
+  .transport-note--resend {
+    top: 2.05rem;
+    animation: note-pulse 2.8s ease-in-out infinite 1.2s;
+  }
+
+  .transport-note--fast {
+    top: 2.05rem;
+    animation: note-pulse 1.7s ease-in-out infinite;
+  }
+
+  .scene-network {
+    background:
+      radial-gradient(circle at 25% 20%, rgb(56 189 248 / 24%), transparent 44%),
+      radial-gradient(circle at 75% 65%, rgb(14 116 144 / 24%), transparent 52%),
+      linear-gradient(180deg, #0f172a, #0b1220);
+  }
+
+  .network-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .network-fallback {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: opacity 260ms ease;
+  }
+
+  .network-webgl-ready .network-fallback {
+    opacity: 0.22;
+  }
+
+  .fallback-node {
+    position: absolute;
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: #7dd3fc;
+    box-shadow: 0 0 10px rgb(125 211 252 / 75%);
+    animation: fallback-node-pulse 2.8s ease-in-out infinite;
+  }
+
+  .node-a {
+    top: 19%;
+    left: 20%;
+  }
+
+  .node-b {
+    top: 63%;
+    left: 32%;
+    animation-delay: 0.4s;
+  }
+
+  .node-c {
+    top: 24%;
+    left: 48%;
+    animation-delay: 0.7s;
+  }
+
+  .node-d {
+    top: 69%;
+    left: 62%;
+    animation-delay: 1.1s;
+  }
+
+  .node-e {
+    top: 25%;
+    left: 77%;
+    animation-delay: 1.4s;
+  }
+
+  .fallback-packet {
+    position: absolute;
+    top: 50%;
+    left: 14%;
+    width: 0.64rem;
+    height: 0.64rem;
+    border-radius: 50%;
+    background: #fef08a;
+    box-shadow: 0 0 14px rgb(253 230 138 / 90%);
+    animation: fallback-route 4.6s linear infinite;
+  }
+
+  .network-label {
+    position: absolute;
+    left: 0.8rem;
+    bottom: 0.7rem;
+    margin: 0;
+    font-size: 0.78rem;
+    color: #dbeafe;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    text-shadow: 0 2px 8px rgb(2 6 23 / 50%);
+  }
+
+  .scene-data-link {
+    background:
+      radial-gradient(circle at 84% 20%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 42%),
+      linear-gradient(150deg, color-mix(in srgb, #f8fafc 84%, transparent), color-mix(in srgb, #ecfeff 68%, transparent));
+  }
+
+  .switch-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(17rem, 52%);
+    transform: translate(-50%, -50%) rotateX(18deg);
+    border-radius: 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--line) 65%, var(--accent-2));
+    background: color-mix(in srgb, var(--bg-elevated) 86%, #ffffff);
+    box-shadow:
+      0 16px 24px rgb(14 23 42 / 12%),
+      inset 0 0 0 1px color-mix(in srgb, var(--accent-2) 24%, transparent);
+    padding: 0.8rem;
+    text-align: center;
+  }
+
+  .switch-title {
+    margin: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .switch-copy {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+
+  .local-device {
+    position: absolute;
+    width: 4.8rem;
+    text-align: center;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--line) 65%, var(--accent-1));
+    background: color-mix(in srgb, var(--bg-elevated) 88%, #ffffff);
+    padding: 0.28rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+  }
+
+  .local-device--a {
+    top: 15%;
+    left: 9%;
+  }
+
+  .local-device--b {
+    top: 15%;
+    right: 9%;
+  }
+
+  .local-device--c {
+    bottom: 14%;
+    right: 18%;
+  }
+
+  .frame-card {
+    position: absolute;
+    width: 3.8rem;
+    height: 1.6rem;
+    border-radius: 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--line) 64%, var(--accent-2));
+    background: linear-gradient(145deg, #f8fafc, #dbeafe);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 14px rgb(15 23 42 / 12%);
+  }
+
+  .frame-card--a {
+    animation: frame-route-a 4.4s linear infinite;
+  }
+
+  .frame-card--b {
+    animation: frame-route-b 4.4s linear infinite 1.45s;
+  }
+
+  .frame-card--c {
+    animation: frame-route-c 4.4s linear infinite 2.75s;
+  }
+
+  .scene-physical {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.7rem;
+    background:
+      radial-gradient(circle at 20% 16%, color-mix(in srgb, var(--accent-1) 14%, transparent), transparent 44%),
+      radial-gradient(circle at 80% 85%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 44%),
+      linear-gradient(165deg, color-mix(in srgb, #f8fafc 88%, transparent), color-mix(in srgb, #f1f5f9 72%, transparent));
+  }
+
+  .medium-lane {
+    position: relative;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--line) 72%, var(--accent-2));
+    overflow: hidden;
+    background: color-mix(in srgb, var(--bg-elevated) 80%, #ffffff);
+    transform: rotateX(10deg);
+    box-shadow: 0 12px 16px rgb(15 23 42 / 9%);
+  }
+
+  .medium-label {
+    margin: 0;
+    position: absolute;
+    left: 0.65rem;
+    top: 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .signal {
+    position: absolute;
+    left: -14%;
+    top: 56%;
+    width: 14%;
+    height: 0.46rem;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    animation: medium-travel 3.1s linear infinite;
+  }
+
+  .signal--two {
+    animation-delay: 1.5s;
+  }
+
+  .medium-lane--fiber .signal {
+    background: linear-gradient(90deg, #a5f3fc, #67e8f9);
+    box-shadow: 0 0 16px rgb(103 232 249 / 80%);
+  }
+
+  .medium-lane--copper .signal {
+    background: repeating-linear-gradient(90deg, #f59e0b 0 7px, #fcd34d 7px 14px);
+    box-shadow: 0 0 14px rgb(245 158 11 / 55%);
+  }
+
+  .medium-lane--wireless .signal {
+    background: linear-gradient(90deg, #93c5fd, #60a5fa);
+    box-shadow: 0 0 14px rgb(96 165 250 / 65%);
+  }
+
+  .wireless-wave {
+    position: absolute;
+    right: 8%;
+    top: 60%;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid rgb(96 165 250 / 70%);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    animation: wireless-ripple 2.6s ease-out infinite;
+  }
+
+  .wave--two {
+    animation-delay: 1.2s;
+  }
+
+  @keyframes card-sway-browser {
+    0%,
+    100% {
+      transform: rotateY(10deg) rotateX(6deg) translateY(0);
+    }
+
+    50% {
+      transform: rotateY(5deg) rotateX(9deg) translateY(-4px);
+    }
+  }
+
+  @keyframes card-sway-server {
+    0%,
+    100% {
+      transform: rotateY(-10deg) rotateX(5deg) translateY(0);
+    }
+
+    50% {
+      transform: rotateY(-4deg) rotateX(7deg) translateY(3px);
+    }
+  }
+
+  @keyframes app-packet-forward {
+    0% {
+      left: 24%;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    50% {
+      transform: scale(1.08);
+    }
+
+    88% {
+      opacity: 1;
+    }
+
+    100% {
+      left: 73%;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes app-packet-back {
+    0% {
+      left: 73%;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    50% {
+      transform: scale(1.08);
+    }
+
+    88% {
+      opacity: 1;
+    }
+
+    100% {
+      left: 24%;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes dns-face-name {
+    0%,
+    43% {
+      transform: rotateX(0deg);
+      opacity: 1;
+    }
+
+    50%,
+    100% {
+      transform: rotateX(180deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes dns-face-ip {
+    0%,
+    43% {
+      transform: rotateX(180deg);
+      opacity: 0;
+    }
+
+    50%,
+    100% {
+      transform: rotateX(360deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes tls-glow {
+    0%,
+    100% {
+      transform: translateX(-50%) scale(1);
+      opacity: 0.9;
+    }
+
+    50% {
+      transform: translateX(-50%) scale(1.07);
+      opacity: 1;
+    }
+  }
+
+  @keyframes packet-lane-move {
+    0% {
+      left: -12%;
+      opacity: 0;
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    88% {
+      opacity: 1;
+    }
+
+    100% {
+      left: 104%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes note-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+
+    50% {
+      transform: scale(1.06);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fallback-node-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fallback-route {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    18% {
+      transform: translate(118px, 54px);
+    }
+
+    39% {
+      transform: translate(216px, -14px);
+    }
+
+    62% {
+      transform: translate(318px, 66px);
+    }
+
+    82% {
+      transform: translate(420px, -5px);
+    }
+
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes frame-route-a {
+    0% {
+      left: 8%;
+      top: 64%;
+      opacity: 0;
+    }
+
+    22% {
+      opacity: 1;
+    }
+
+    42% {
+      left: 40%;
+      top: 50%;
+    }
+
+    72% {
+      left: 70%;
+      top: 25%;
+      opacity: 1;
+    }
+
+    100% {
+      left: 74%;
+      top: 21%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes frame-route-b {
+    0% {
+      left: 11%;
+      top: 34%;
+      opacity: 0;
+    }
+
+    20% {
+      opacity: 1;
+    }
+
+    43% {
+      left: 38%;
+      top: 46%;
+    }
+
+    73% {
+      left: 18%;
+      top: 19%;
+      opacity: 1;
+    }
+
+    100% {
+      left: 12%;
+      top: 16%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes frame-route-c {
+    0% {
+      left: 79%;
+      top: 70%;
+      opacity: 0;
+    }
+
+    21% {
+      opacity: 1;
+    }
+
+    44% {
+      left: 58%;
+      top: 50%;
+    }
+
+    74% {
+      left: 73%;
+      top: 74%;
+      opacity: 1;
+    }
+
+    100% {
+      left: 79%;
+      top: 70%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes medium-travel {
+    0% {
+      left: -14%;
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    90% {
+      opacity: 1;
+    }
+
+    100% {
+      left: 105%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes wireless-ripple {
+    0% {
+      transform: translateY(-50%) scale(0.35);
+      opacity: 0.85;
+    }
+
+    100% {
+      transform: translateY(-50%) scale(2.25);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 52rem) {
+    .internet-layer-visual__stage {
+      height: min(18rem, 72vw);
+    }
+
+    .switch-core {
+      width: 64%;
+    }
+
+    .local-device {
+      width: 4.2rem;
+      font-size: 0.66rem;
+    }
+
+    .network-label {
+      max-width: 65%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .internet-layer-visual__stage * {
+      animation-duration: 10s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0ms !important;
+    }
+
+    .app-card--browser,
+    .app-card--server,
+    .transport-lane,
+    .medium-lane {
+      transform: none;
+    }
+
+    .network-fallback {
+      opacity: 0.82;
+    }
+  }
+</style>

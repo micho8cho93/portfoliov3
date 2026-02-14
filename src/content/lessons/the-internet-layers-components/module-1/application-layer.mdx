@@ -1,0 +1,91 @@
+---
+courseId: the-internet-layers-components
+moduleId: "01"
+moduleTitle: Module 1 · Application Layer
+title: Application Layer
+description: Understand how DNS, HTTP, and TLS handle human-friendly web requests.
+order: 1
+estimatedMinutes: 35
+objectives:
+  - Explain how DNS maps names to numeric addresses.
+  - Describe HTTP request and response behavior in plain language.
+  - Explain how TLS adds privacy and integrity to app traffic.
+tryIts:
+  - title: Map a web visit flow
+    prompt: Write the request path from browser to server in three short steps.
+    starterCode: |
+      1) Name lookup: ____________________
+      2) Request rule set: ____________________
+      3) Privacy layer: ____________________
+    expectedOutput: |
+      Example:
+      1) DNS maps learnsite.org to an IP.
+      2) HTTP sends GET /home and receives a response.
+      3) TLS encrypts the data in transit.
+    tags:
+      - dns
+      - http
+      - tls
+breakIts:
+  - title: Missing DNS lookup
+    prompt: The browser sends HTTP to a website name without converting the name first. Explain the failure.
+    starterCode: |
+      browser_address = "schoolportal.edu"
+      transport_destination = browser_address
+      print("Sending HTTP request to", transport_destination)
+    expectedOutput: |
+      The destination must be an IP address first, so DNS is required before HTTP delivery.
+    hints:
+      - Routers forward by numeric addressing.
+      - Domain names are for people, not forwarding tables.
+fixIts:
+  - title: Add TLS to a plain request
+    prompt: Update the flow so the request is encrypted before transit.
+    starterCode: |
+      destination = "198.51.100.24"
+      protocol = "HTTP"
+      print(protocol, "request to", destination)
+    solutionCode: |
+      destination = "198.51.100.24"
+      protocol = "HTTPS (HTTP + TLS)"
+      print(protocol, "request to", destination)
+    expectedOutput: |
+      HTTPS (HTTP + TLS) request to 198.51.100.24
+checks:
+  - label: DNS role check
+    type: concept
+    criteria: Explain what DNS does before the first HTTP message is sent.
+  - label: HTTP exchange check
+    type: output
+    criteria: State what a browser sends first when opening a page and what the server sends back.
+  - label: TLS purpose check
+    type: concept
+    criteria: Describe one risk TLS reduces during transit.
+updatedDate: 2026-02-14
+---
+
+import InternetLayerVisual from '../../../../components/course/InternetLayerVisual.astro';
+
+# Application Layer
+
+The application layer is where user-facing rules live: naming, requesting, and protecting content.
+
+<InternetLayerVisual layer="application" analogyLabel="Restaurant front desk: names, menu orders, and sealed envelopes." />
+
+## Real-World Analogy
+
+Think of a restaurant front desk:
+
+- `DNS` is the host stand translating a restaurant name into a street number.
+- `HTTP` is how you place and receive your order.
+- `TLS` is a sealed envelope so others cannot read your order on the way.
+
+## Components In This Layer (From the PDF Definitions)
+
+- `DNS`: Converts readable names into numeric destination addresses.
+- `HTTP`: Defines request and response message format for web resources.
+- `TLS`: Adds encryption and integrity checks to protect application data.
+
+## What The Loop Visual Shows
+
+The cards represent browser and server. Packets move in both directions for request and response, DNS flips from name to number, and the lock pulse represents TLS protection.
