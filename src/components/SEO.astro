@@ -3,7 +3,8 @@ interface Props {
   title: string;
   description: string;
   canonical?: string;
-  image?: string;
+  ogImage?: string;
+  noindex?: boolean;
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
@@ -13,27 +14,29 @@ const {
   title,
   description,
   canonical,
-  image = '/social-card.svg',
+  ogImage = '/social-card.svg',
+  noindex = false,
   type = 'website',
   publishedTime,
   modifiedTime
 } = Astro.props;
 
-const ogImage = new URL(image, Astro.site).toString();
+const resolvedOgImage = new URL(ogImage, Astro.site).toString();
 const canonicalUrl = canonical ? new URL(canonical, Astro.site).toString() : Astro.url.toString();
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
 <meta property="og:type" content={type} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
-<meta property="og:image" content={ogImage} />
+<meta property="og:image" content={resolvedOgImage} />
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={ogImage} />
+<meta property="twitter:image" content={resolvedOgImage} />
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}

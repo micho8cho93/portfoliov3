@@ -1,4 +1,8 @@
 export const home = '/';
+export const about = '/about';
+export const teaching = '/teaching';
+export const learning = '/learning';
+export const institutions = '/institutions';
 export const blog = '/blog';
 export const projects = '/projects';
 export const courses = '/courses';
@@ -8,11 +12,15 @@ export const rss = '/rss.xml';
 
 export const routeLabels = {
   home: 'Home',
-  blog: 'Blog',
+  teaching: 'Teaching',
+  learning: 'Learning',
+  institutions: 'Institutions',
   projects: 'Projects',
-  courses: 'Courses',
   resources: 'Resources',
+  blog: 'Blog',
+  about: 'About',
   contact: 'Contact',
+  courses: 'Courses',
   rss: 'RSS'
 } as const;
 

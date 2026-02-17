@@ -1,0 +1,33 @@
+---
+import { withBase } from '../../utils/withBase';
+import { contact, courses } from '../../lib/routes';
+---
+
+<section class="conversion-band" aria-labelledby="conversion-title">
+  <h2 id="conversion-title" class="section-heading">Bring this approach to your school or district</h2>
+  <p class="measure">
+    Whether you need curriculum coaching, workshop facilitation, or program strategy, let's design the
+    next step.
+  </p>
+  <div class="actions">
+    <a class="button" href={withBase(contact)}>Start a conversation</a>
+    <a class="button secondary" href={withBase(courses)}>Explore all courses</a>
+  </div>
+</section>
+
+<style>
+  .conversion-band {
+    margin-block: 3.5rem;
+    padding: 1.75rem;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+    border: 1px solid #dbeafe;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+</style>

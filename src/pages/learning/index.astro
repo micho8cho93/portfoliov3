@@ -1,0 +1,31 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, courses, projects } from '../../lib/routes';
+---
+
+<Layout title="Learning" description="For students: pathways in Python, CS fundamentals, and project-based learning.">
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Learning' }]} />
+  <h1>Learning</h1>
+  <p class="measure">
+    This section supports students with learning pathways, exercises, and projects that build confidence in
+    computer science.
+  </p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/learning/python')}>Python pathway</a></li>
+      <li><a href={withBase('/learning/python/exercises')}>Python exercises</a></li>
+      <li><a href={withBase('/learning/fundamentals')}>Algorithms, data structures, and networking</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Related content</h2>
+    <ul>
+      <li><a href={withBase(courses)}>View available courses</a></li>
+      <li><a href={withBase(projects)}>See projects for applied practice</a></li>
+    </ul>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Ask about learning pathways</a></p>
+</Layout>

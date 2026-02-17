@@ -1,24 +1,37 @@
 ---
-import { stripBasePath, normalizePathname } from "../utils/pathname";
-import { withBase } from "../utils/withBase";
+import { stripBasePath, normalizePathname } from '../utils/pathname';
+import { withBase } from '../utils/withBase';
 import {
-  home,
+  about,
   blog,
-  projects,
-  courses,
-  resources,
   contact,
+  home,
+  institutions,
+  learning,
+  projects,
+  resources,
   routeLabels,
-} from "../lib/routes";
+  teaching
+} from '../lib/routes';
 
 const currentPathname = normalizePathname(stripBasePath(Astro.url.pathname));
 
 const navItems = [
-  { route: courses, label: routeLabels.courses },
+  { route: home, label: routeLabels.home },
+  { route: teaching, label: routeLabels.teaching },
+  { route: learning, label: routeLabels.learning },
+  { route: institutions, label: routeLabels.institutions },
+  { route: projects, label: routeLabels.projects },
   { route: resources, label: routeLabels.resources },
   { route: blog, label: routeLabels.blog },
-  { route: projects, label: routeLabels.projects },
-  { route: contact, label: routeLabels.contact },
+  { route: about, label: routeLabels.about },
+  { route: contact, label: routeLabels.contact }
+];
+
+const startHereItems = [
+  { route: teaching, label: 'Teachers' },
+  { route: learning, label: 'Students' },
+  { route: institutions, label: 'Institutions' }
 ];
 ---
 
@@ -28,30 +41,41 @@ const navItems = [
       href={withBase(home)}
       class="brand"
       aria-label="CS Educator home"
-      aria-current={currentPathname === home ? "page" : undefined}
+      aria-current={currentPathname === home ? 'page' : undefined}
     >
       <span class="brand-name">CS Educator</span>
-      <span class="brand-tagline"
-        >Computer science teaching & practical learning</span
-      >
+      <span class="brand-tagline">Computer science teaching & practical learning</span>
     </a>
 
-    <ul>
-      {navItems.map((item) => {
-        const itemRoute = normalizePathname(item.route);
+    <div class="nav-groups">
+      <details class="start-here-menu">
+        <summary>Start here</summary>
+        <ul>
+          {startHereItems.map((item) => (
+            <li>
+              <a href={withBase(item.route)}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </details>
 
-        return (
-          <li>
-            <a
-              class="nav-link"
-              href={withBase(itemRoute)}
-              aria-current={currentPathname === itemRoute ? "page" : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        );
-      })}
-    </ul>
+      <ul>
+        {navItems.map((item) => {
+          const itemRoute = normalizePathname(item.route);
+
+          return (
+            <li>
+              <a
+                class="nav-link"
+                href={withBase(itemRoute)}
+                aria-current={currentPathname === itemRoute ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   </nav>
 </header>

@@ -1,0 +1,32 @@
+---
+import Layout from '../../../components/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { withBase } from '../../../utils/withBase';
+import { courses, contact } from '../../../lib/routes';
+---
+
+<Layout title="Learning: Python" description="Python learning cluster page with links to courses and exercises.">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Learning', href: '/learning' },
+      { label: 'Python' }
+    ]}
+  />
+  <h1>Python</h1>
+  <p class="measure">Build Python fluency through guided lessons, iterative practice, and project-oriented problem solving.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/learning/python/exercises')}>Practice with Python exercises</a></li>
+      <li><a href={withBase(courses)}>Explore Python-focused courses</a></li>
+      <li><a href={withBase('/learning/fundamentals')}>Connect Python to CS fundamentals</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Project sequences</h3>
+    <h3>Debugging playbooks</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Get support for Python learning</a></p>
+</Layout>

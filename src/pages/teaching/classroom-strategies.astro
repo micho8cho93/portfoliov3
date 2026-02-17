@@ -1,0 +1,32 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { blog, contact, resources } from '../../lib/routes';
+---
+
+<Layout title="Teaching: Classroom Strategies" description="Classroom strategy cluster page focused on practical teaching routines.">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Teaching', href: '/teaching' },
+      { label: 'Classroom Strategies' }
+    ]}
+  />
+  <h1>Classroom Strategies</h1>
+  <p class="measure">Explore routines that center studio-style learning, visible thinking, and iterative feedback in CS classrooms.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(blog)}>Read teaching notes from the classroom</a></li>
+      <li><a href={withBase(resources)}>Download ready-to-use resources</a></li>
+      <li><a href={withBase('/teaching/lesson-plans')}>Connect strategies to lesson planning</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Discussion protocols</h3>
+    <h3>Revision workflow examples</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Book a teaching strategy session</a></p>
+</Layout>

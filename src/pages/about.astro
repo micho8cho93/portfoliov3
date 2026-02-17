@@ -1,0 +1,24 @@
+---
+import Layout from '../components/Layout.astro';
+import { withBase } from '../utils/withBase';
+import { contact, institutions, learning, teaching } from '../lib/routes';
+---
+
+<Layout title="About" description="About Alex Morgan, CS educator focused on equitable, project-based learning.">
+  <h1>About</h1>
+  <p class="measure">
+    I am a computer science educator and instructional leader focused on project-driven classes where
+    students debug in public, revise with feedback, and connect technical skills to community impact.
+  </p>
+
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(teaching)}>For teachers: classroom strategies and resources</a></li>
+      <li><a href={withBase(learning)}>For students: learning pathways and exercises</a></li>
+      <li><a href={withBase(institutions)}>For institutions: workshops and curriculum support</a></li>
+    </ul>
+  </section>
+
+  <p><a class="button" href={withBase(contact)}>Contact Alex Morgan</a></p>
+</Layout>

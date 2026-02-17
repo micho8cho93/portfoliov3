@@ -1,6 +1,6 @@
 ---
-import { withBase } from "../../utils/withBase";
-import { blogPost, rss } from "../../lib/routes";
+import { withBase } from '../../utils/withBase';
+import { blogPost, rss } from '../../lib/routes';
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import TagList from '../../components/TagList.astro';
@@ -13,6 +13,15 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 
 <Layout title="Blog" description="Insights on teaching CS, curriculum, and pedagogy.">
   <h1>Blog</h1>
+  <p class="measure">Teaching notes and practical reflections on computer science education, curriculum, and pedagogy.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/teaching')}>Teacher pathway</a></li>
+      <li><a href={withBase('/learning')}>Student pathway</a></li>
+      <li><a href={withBase('/contact')}>Invite speaking or workshops</a></li>
+    </ul>
+  </section>
   <p><a href={withBase(rss)}>Subscribe via RSS</a></p>
   <div class="stack">
     {posts.map((post) => (
@@ -28,4 +37,5 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
       </article>
     ))}
   </div>
+  <p><a class="button" href={withBase('/contact')}>Contact about workshops</a></p>
 </Layout>

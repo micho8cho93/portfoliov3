@@ -1,0 +1,59 @@
+---
+import { withBase } from '../../utils/withBase';
+import { institutions, learning, teaching } from '../../lib/routes';
+
+const pathways = [
+  {
+    title: 'Teachers',
+    href: teaching,
+    description: 'Lesson plans, classroom routines, and assessment supports for CS instruction.'
+  },
+  {
+    title: 'Students',
+    href: learning,
+    description: 'Guided pathways for Python, fundamentals, and project-based growth.'
+  },
+  {
+    title: 'Institutions',
+    href: institutions,
+    description: 'Workshops, curriculum design, and program support for schools and districts.'
+  }
+];
+---
+
+<section aria-labelledby="choose-path-title" class="pathways">
+  <h2 id="choose-path-title" class="section-heading">Choose your path</h2>
+  <div class="pathway-grid">
+    {pathways.map((pathway) => (
+      <article>
+        <h3>{pathway.title}</h3>
+        <p>{pathway.description}</p>
+        <a class="button secondary" href={withBase(pathway.href)}>Start here</a>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .pathways {
+    margin-block: 3.5rem;
+  }
+
+  .pathway-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .pathway-grid article {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d8dee9;
+    background: #f8fafc;
+  }
+
+  @media (min-width: 880px) {
+    .pathway-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

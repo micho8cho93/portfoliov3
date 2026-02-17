@@ -1,0 +1,37 @@
+---
+import Layout from '../../components/Layout.astro';
+import ProofPracticeSection from '../../components/sections/ProofPracticeSection.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, resources } from '../../lib/routes';
+import { getCollection } from 'astro:content';
+
+const courses = (await getCollection('courses')).slice(0, 2);
+const projects = (await getCollection('projects')).slice(0, 2);
+const resourcesList = (await getCollection('resources')).slice(0, 2);
+---
+
+<Layout title="Teaching" description="For teachers: lesson plans, classroom strategies, and assessment supports.">
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Teaching' }]} />
+  <h1>Teaching</h1>
+  <p class="measure">
+    This section is built for teachers who want practical classroom tools, project-based routines, and
+    equitable computer science instruction.
+  </p>
+
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/teaching/lesson-plans')}>Lesson Plans</a></li>
+      <li><a href={withBase('/teaching/assessment-rubrics')}>Assessment Rubrics</a></li>
+      <li><a href={withBase('/teaching/classroom-strategies')}>Classroom Strategies</a></li>
+    </ul>
+  </section>
+
+  <ProofPracticeSection coursesList={courses} projectsList={projects} resourcesList={resourcesList} />
+
+  <p>
+    <a class="button" href={withBase(resources)}>Download resources</a>
+    <a class="button secondary" href={withBase(contact)}>Book a workshop</a>
+  </p>
+</Layout>

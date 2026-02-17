@@ -1,0 +1,149 @@
+---
+import { withBase } from '../../utils/withBase';
+import { course, courses, project, projects, resource, resources as resourcesRoute } from '../../lib/routes';
+import Card from '../Card.astro';
+
+interface Props {
+  coursesList: any[];
+  projectsList: any[];
+  resourcesList: any[];
+  showViewAll?: boolean;
+}
+
+const { coursesList, projectsList, resourcesList, showViewAll = false } = Astro.props;
+---
+
+<section class="proof-practice" aria-labelledby="proof-title">
+  <div class="proof-grid">
+    <div>
+      <h2 id="proof-title" class="section-heading">
+        Courses, projects, and resources from the classroom floor
+      </h2>
+      <p class="measure">
+        A snapshot of what I run, build, and share for teachers, grouped into
+        focused streams.
+      </p>
+    </div>
+
+    <div class="proof-streams">
+      <section class="proof-stream" aria-labelledby="proof-courses-title">
+        <div class="stream-header">
+          <h3 id="proof-courses-title">Courses</h3>
+          {showViewAll && <a href={withBase(courses)}>View all</a>}
+        </div>
+        <div class="compact-grid">
+          {coursesList.length ? (
+            coursesList.map((courseItem) => (
+              <Card
+                title={courseItem.data.title}
+                description={courseItem.data.description}
+                href={withBase(course(courseItem.slug))}
+                meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
+                variant="course"
+              />
+            ))
+          ) : (
+            <p>Course showcase coming soon.</p>
+          )}
+        </div>
+      </section>
+
+      <section class="proof-stream" aria-labelledby="proof-projects-title">
+        <div class="stream-header">
+          <h3 id="proof-projects-title">Projects</h3>
+          {showViewAll && <a href={withBase(projects)}>View all</a>}
+        </div>
+        <div class="compact-grid">
+          {projectsList.length ? (
+            projectsList.map((projectItem) => (
+              <Card
+                title={projectItem.data.title}
+                description={projectItem.data.description}
+                href={withBase(project(projectItem.slug))}
+                meta={`${projectItem.data.year} · ${projectItem.data.role}`}
+                variant="project"
+              />
+            ))
+          ) : (
+            <p>Project spotlight coming soon.</p>
+          )}
+        </div>
+      </section>
+
+      <section class="proof-stream" aria-labelledby="proof-resources-title">
+        <div class="stream-header">
+          <h3 id="proof-resources-title">Resources</h3>
+          {showViewAll && <a href={withBase(resourcesRoute)}>View all</a>}
+        </div>
+        <div class="compact-grid">
+          {resourcesList.length ? (
+            resourcesList.map((resourceItem) => (
+              <Card
+                title={resourceItem.data.title}
+                description={resourceItem.data.description}
+                href={withBase(resource(resourceItem.slug))}
+                meta={resourceItem.data.type}
+                variant="resource"
+              />
+            ))
+          ) : (
+            <p>Resource feature coming soon.</p>
+          )}
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<style>
+  .proof-practice {
+    margin-block: 3.5rem;
+  }
+
+  .proof-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .proof-streams {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .proof-stream {
+    padding: 1rem;
+    border: 1px solid #d8dee9;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+  }
+
+  .stream-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .stream-header h3 {
+    margin: 0;
+  }
+
+  .compact-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 880px) {
+    .proof-grid {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .proof-streams {
+      margin-top: 1.25rem;
+    }
+  }
+</style>

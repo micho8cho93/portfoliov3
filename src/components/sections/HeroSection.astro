@@ -1,0 +1,106 @@
+---
+import { withBase } from '../../utils/withBase';
+import { blog, contact } from '../../lib/routes';
+---
+
+<section class="hero-manifesto" aria-labelledby="hero-title">
+  <div class="hero-grid">
+    <div>
+      <h1 id="hero-title" class="reveal-load reveal-load--headline">
+        Helping students think like engineers, not just coders.
+      </h1>
+      <p class="lead measure reveal-load reveal-load--subcopy">
+        I design project-driven classes where students debug in public, revise
+        with feedback, and connect technical skills to community impact.
+      </p>
+      <div class="actions reveal-load reveal-load--cta">
+        <a class="button" href={withBase(blog)}>Read teaching notes</a>
+        <a class="button secondary" href={withBase(contact)}>Book a workshop</a>
+      </div>
+    </div>
+
+    <aside class="signature-block" aria-label="Teaching thesis">
+      <blockquote>
+        “Rigor belongs to every learner when we teach process, reflection, and
+        iteration—not just syntax.”
+      </blockquote>
+      <p class="signature-meta">
+        My teaching thesis: equitable CS through visible thinking routines.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .hero-manifesto {
+    margin-block: 3.5rem;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .lead {
+    font-size: 1.15rem;
+    max-width: 60ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .signature-block {
+    position: relative;
+    padding: 1.2rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--accent, #4f46e5) 40%, white);
+    background: color-mix(in oklab, var(--accent, #4f46e5) 10%, white);
+  }
+
+  .signature-block::before,
+  .signature-block::after {
+    position: absolute;
+    font-size: 2rem;
+    color: color-mix(in oklab, var(--accent, #4f46e5) 55%, black);
+    line-height: 1;
+  }
+
+  .signature-block::before {
+    content: '⟨';
+    top: 0.15rem;
+    left: 0.5rem;
+  }
+
+  .signature-block::after {
+    content: '⟩';
+    right: 0.5rem;
+    bottom: 0.15rem;
+  }
+
+  .signature-block blockquote {
+    margin: 0.6rem 0;
+    font-size: 1.1rem;
+    font-weight: 650;
+  }
+
+  .signature-meta {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 880px) {
+    .hero-grid {
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .signature-block {
+      margin-top: 2rem;
+    }
+  }
+</style>
