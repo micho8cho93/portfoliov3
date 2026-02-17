@@ -28,7 +28,12 @@ const resourcesList = (await getCollection('resources')).slice(0, 2);
     </ul>
   </section>
 
-  <ProofPracticeSection coursesList={courses} projectsList={projects} resourcesList={resourcesList} />
+  <ProofPracticeSection
+    coursesList={courses}
+    projectsList={projects}
+    resourcesList={resourcesList}
+    teachingLayout={true}
+  />
 
   <p>
     <a class="button" href={withBase(resources)}>Download resources</a>

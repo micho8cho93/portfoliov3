@@ -1,5 +1,4 @@
 ---
-import { withBase } from '../../utils/withBase';
 import { institutions, learning, teaching } from '../../lib/routes';
 
 const pathways = [
@@ -28,7 +27,6 @@ const pathways = [
       <article>
         <h3>{pathway.title}</h3>
         <p>{pathway.description}</p>
-        <a class="button secondary" href={withBase(pathway.href)}>Start here</a>
       </article>
     ))}
   </div>

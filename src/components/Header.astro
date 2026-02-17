@@ -28,11 +28,6 @@ const navItems = [
   { route: contact, label: routeLabels.contact }
 ];
 
-const startHereItems = [
-  { route: teaching, label: 'Teachers' },
-  { route: learning, label: 'Students' },
-  { route: institutions, label: 'Institutions' }
-];
 ---
 
 <header class="site-header">
@@ -48,17 +43,6 @@ const startHereItems = [
     </a>
 
     <div class="nav-groups">
-      <details class="start-here-menu">
-        <summary>Start here</summary>
-        <ul>
-          {startHereItems.map((item) => (
-            <li>
-              <a href={withBase(item.route)}>{item.label}</a>
-            </li>
-          ))}
-        </ul>
-      </details>
-
       <ul>
         {navItems.map((item) => {
           const itemRoute = normalizePathname(item.route);
