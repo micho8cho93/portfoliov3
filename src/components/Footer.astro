@@ -1,23 +1,15 @@
 ---
-import { withBase } from "../utils/withBase";
-import {
-  home,
-  courses,
-  blog,
-  projects,
-  contact,
-  rss,
-  routeLabels,
-} from "../lib/routes";
+import { withBase } from '../utils/withBase';
+import { home, teaching, learning, institutions, projects, resources, contact, rss, routeLabels } from '../lib/routes';
 
 const teachingFocusAreas = [
-  "Web development foundations",
-  "AP CSP + AP CSA support",
-  "Project-based learning pathways",
+  'Web development foundations',
+  'AP CSP + AP CSA support',
+  'Project-based learning pathways'
 ];
 
 const featuredNow =
-  "Now: Building short, classroom-ready coding labs that blend JavaScript fundamentals with creative projects.";
+  'Now: Building short, classroom-ready coding labs that blend JavaScript fundamentals with creative projects.';
 ---
 
 <footer class="site-footer">
@@ -26,9 +18,9 @@ const featuredNow =
       <h2 class="footer-heading">Quick links</h2>
       <ul>
         <li><a href={withBase(home)}>{routeLabels.home}</a></li>
-        <li><a href={withBase(courses)}>{routeLabels.courses}</a></li>
-        <li><a href={withBase(blog)}>{routeLabels.blog}</a></li>
-        <li><a href={withBase(projects)}>{routeLabels.projects}</a></li>
+        <li><a href={withBase(teaching)}>{routeLabels.teaching}</a></li>
+        <li><a href={withBase(learning)}>{routeLabels.learning}</a></li>
+        <li><a href={withBase(institutions)}>{routeLabels.institutions}</a></li>
       </ul>
     </div>
 
@@ -40,11 +32,13 @@ const featuredNow =
     </div>
 
     <div class="footer-column">
-      <h2 class="footer-heading">Contact & social</h2>
+      <h2 class="footer-heading">More</h2>
       <ul>
+        <li><a href={withBase(projects)}>{routeLabels.projects}</a></li>
+        <li><a href={withBase(resources)}>{routeLabels.resources}</a></li>
         <li><a href={withBase(contact)}>{routeLabels.contact}</a></li>
         <li><a href={withBase(rss)}>{routeLabels.rss}</a></li>
-        <li><a href={withBase("/sitemap-index.xml")}>Sitemap</a></li>
+        <li><a href={withBase('/sitemap-index.xml')}>Sitemap</a></li>
       </ul>
     </div>
   </div>

@@ -1,0 +1,33 @@
+---
+import Layout from '../../../components/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { withBase } from '../../../utils/withBase';
+import { courses, resources, contact } from '../../../lib/routes';
+---
+
+<Layout title="Learning: Python Exercises" description="Python exercises cluster page connected to existing courses and resources.">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Learning', href: '/learning' },
+      { label: 'Python', href: '/learning/python' },
+      { label: 'Exercises' }
+    ]}
+  />
+  <h1>Python Exercises</h1>
+  <p class="measure">Use exercises to strengthen variables, conditionals, functions, loops, strings, and lists through repeated practice.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(courses)}>Find exercise-ready course tracks</a></li>
+      <li><a href={withBase(resources)}>Use supporting templates and tools</a></li>
+      <li><a href={withBase('/learning/python')}>Return to Python pathway overview</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Exercise sets by concept</h3>
+    <h3>Challenge progression levels</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Request exercise guidance</a></p>
+</Layout>

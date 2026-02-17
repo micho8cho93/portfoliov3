@@ -1,0 +1,35 @@
+---
+import Layout from '../../../components/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { withBase } from '../../../utils/withBase';
+import { courses, projects, contact } from '../../../lib/routes';
+---
+
+<Layout
+  title="Learning: Fundamentals"
+  description="Foundations in algorithms, data structures, and networking for students."
+>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Learning', href: '/learning' },
+      { label: 'Fundamentals' }
+    ]}
+  />
+  <h1>Fundamentals</h1>
+  <p class="measure">Use this cluster as an entry point for algorithms, data structures, and networking concepts in practical contexts.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(courses)}>Courses covering core CS topics</a></li>
+      <li><a href={withBase(projects)}>Projects that apply fundamentals</a></li>
+      <li><a href={withBase('/learning/python')}>Reinforce fundamentals through Python</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Algorithm walkthrough series</h3>
+    <h3>Networking concept maps</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Contact for student support options</a></p>
+</Layout>

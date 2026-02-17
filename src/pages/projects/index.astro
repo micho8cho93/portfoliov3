@@ -1,6 +1,6 @@
 ---
-import { withBase } from "../../utils/withBase";
-import { project as projectRoute } from "../../lib/routes";
+import { withBase } from '../../utils/withBase';
+import { project as projectRoute } from '../../lib/routes';
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
@@ -12,6 +12,15 @@ const projects = (await getCollection('projects')).sort(
 
 <Layout title="Projects" description="Selected projects in CS education and developer tooling.">
   <h1>Projects</h1>
+  <p class="measure">A collection of classroom-connected and tooling projects that support teaching and learning outcomes.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/teaching')}>See how projects support teaching</a></li>
+      <li><a href={withBase('/learning')}>Explore student learning pathways</a></li>
+      <li><a href={withBase('/contact')}>Discuss a project collaboration</a></li>
+    </ul>
+  </section>
   <div class="grid">
     {projects.map((projectItem) => (
       <Card
@@ -23,4 +32,5 @@ const projects = (await getCollection('projects')).sort(
       />
     ))}
   </div>
+  <p><a class="button" href={withBase('/contact')}>Contact about projects</a></p>
 </Layout>

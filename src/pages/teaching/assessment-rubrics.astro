@@ -1,0 +1,32 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, resources } from '../../lib/routes';
+---
+
+<Layout title="Teaching: Assessment Rubrics" description="Assessment rubric cluster page for CS teaching and project-based learning.">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Teaching', href: '/teaching' },
+      { label: 'Assessment Rubrics' }
+    ]}
+  />
+  <h1>Assessment Rubrics</h1>
+  <p class="measure">Use structured rubrics to make feedback visible, support revision cycles, and communicate expectations clearly.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(resources)}>Project rubric templates and resources</a></li>
+      <li><a href={withBase('/teaching/lesson-plans')}>Lesson plans that include checkpoints</a></li>
+      <li><a href={withBase('/teaching/classroom-strategies')}>Classroom feedback strategies</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Rubric calibration guidance</h3>
+    <h3>Student reflection add-ons</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Contact for rubric coaching</a></p>
+</Layout>

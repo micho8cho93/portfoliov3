@@ -1,15 +1,27 @@
 ---
 import Layout from '../components/Layout.astro';
+import { withBase } from '../utils/withBase';
 ---
 
 <Layout title="Contact" description="Connect for workshops, speaking, and collaboration.">
   <h1>Contact</h1>
-  <p>
+  <p class="measure">
     Interested in workshops, curriculum consulting, or speaking on CS pedagogy? I’d love to connect.
   </p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/teaching')}>Support for teachers</a></li>
+      <li><a href={withBase('/learning')}>Pathways for students</a></li>
+      <li><a href={withBase('/institutions')}>Partnerships with schools and districts</a></li>
+    </ul>
+  </section>
   <ul>
     <li>Email: <a href="mailto:hello@example.com">hello@example.com</a></li>
-    <li>LinkedIn: <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn profile</a></li>
+    <li>
+      LinkedIn:
+      <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>
+    </li>
     <li>GitHub: <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub profile</a></li>
   </ul>
   <p><a class="button" href="mailto:hello@example.com?subject=Workshop%20Inquiry">Send workshop inquiry</a></p>

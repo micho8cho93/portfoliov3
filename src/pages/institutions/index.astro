@@ -1,0 +1,34 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, projects, resources } from '../../lib/routes';
+---
+
+<Layout
+  title="Institutions"
+  description="For schools and districts: workshops, curriculum design, and implementation support."
+>
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Institutions' }]} />
+  <h1>Institutions</h1>
+  <p class="measure">
+    This section is for schools, districts, and partners looking to strengthen computer science programs with
+    practical professional learning and curriculum support.
+  </p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/institutions/workshops')}>Workshops</a></li>
+      <li><a href={withBase('/institutions/curriculum-design')}>Curriculum Design</a></li>
+      <li><a href={withBase(resources)}>Shared tools and resources</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Related work</h2>
+    <ul>
+      <li><a href={withBase(projects)}>Project examples</a></li>
+      <li><a href={withBase('/teaching')}>Teaching pathway</a></li>
+    </ul>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Contact for institutional support</a></p>
+</Layout>

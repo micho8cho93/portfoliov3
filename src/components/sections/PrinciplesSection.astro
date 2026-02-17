@@ -1,0 +1,48 @@
+<section class="principles" aria-labelledby="principles-title">
+  <h2 id="principles-title" class="section-heading">How I structure learning that lasts</h2>
+  <div class="principles-grid">
+    <article>
+      <h3>Studio over lecture</h3>
+      <p>
+        Students spend most of class making, testing, and critiquing, with mini-lessons at point of
+        need.
+      </p>
+    </article>
+    <article>
+      <h3>Feedback loops first</h3>
+      <p>
+        Every unit includes checkpoints, reflection prompts, and revision cycles so growth is visible.
+      </p>
+    </article>
+    <article>
+      <h3>Identity and access</h3>
+      <p>
+        I anchor technical work in student voice and real-world context to broaden who feels they belong
+        in CS.
+      </p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .principles {
+    margin-block: 3.5rem;
+  }
+
+  .principles-grid {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .principles-grid article {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d8dee9;
+  }
+
+  @media (min-width: 880px) {
+    .principles-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

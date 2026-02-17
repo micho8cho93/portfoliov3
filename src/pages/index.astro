@@ -1,37 +1,38 @@
 ---
-import { withBase } from "../utils/withBase";
-import { blog, contact, courses as coursesRoute, course, project, resource } from "../lib/routes";
-import Layout from "../components/Layout.astro";
-import Card from "../components/Card.astro";
-import { getCollection } from "astro:content";
+import Layout from '../components/Layout.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
+import ChoosePathSection from '../components/sections/ChoosePathSection.astro';
+import ProofPracticeSection from '../components/sections/ProofPracticeSection.astro';
+import PrinciplesSection from '../components/sections/PrinciplesSection.astro';
+import ConversionBandSection from '../components/sections/ConversionBandSection.astro';
+import { getCollection } from 'astro:content';
 
-const courses = (await getCollection("courses"))
+const courses = (await getCollection('courses'))
   .filter((item) => item.data.featured)
   .slice(0, 2);
-const projects = (await getCollection("projects"))
+const projects = (await getCollection('projects'))
   .sort(
     (a, b) =>
       Number(b.data.featured ?? false) - Number(a.data.featured ?? false) ||
-      b.data.year - a.data.year,
+      b.data.year - a.data.year
   )
   .slice(0, 2);
-const resources = (await getCollection("resources")).slice(0, 2);
+const resources = (await getCollection('resources')).slice(0, 2);
 
 const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Alex Morgan",
-  jobTitle: "CS Educator & Athletic Director",
-  description:
-    "Computer science educator focused on equitable, project-based learning.",
-  url: Astro.site,
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Alex Morgan',
+  jobTitle: 'CS Educator & Athletic Director',
+  description: 'Computer science educator focused on equitable, project-based learning.',
+  url: Astro.site
 };
 
 const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Alex Morgan CS Education",
-  url: Astro.site,
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Alex Morgan CS Education',
+  url: Astro.site
 };
 ---
 
@@ -39,288 +40,17 @@ const websiteSchema = {
   title="Alex Morgan | CS Educator & Thought Leader"
   description="Teaching-focused portfolio and writing on computer science education."
 >
-  <section class="hero-manifesto" aria-labelledby="hero-title">
-    <div class="hero-grid">
-      <div>
-        <h1 id="hero-title" class="reveal-load reveal-load--headline">
-          Helping students think like engineers, not just coders.
-        </h1>
-        <p class="lead measure reveal-load reveal-load--subcopy">
-          I design project-driven classes where students debug in public, revise
-          with feedback, and connect technical skills to community impact.
-        </p>
-        <div class="actions reveal-load reveal-load--cta">
-          <a class="button" href={withBase(blog)}>Read teaching notes</a>
-          <a class="button secondary" href={withBase(contact)}>Book a workshop</a>
-        </div>
-      </div>
-
-      <aside class="signature-block" aria-label="Teaching thesis">
-        <blockquote>
-          “Rigor belongs to every learner when we teach process, reflection, and
-          iteration—not just syntax.”
-        </blockquote>
-        <p class="signature-meta">
-          My teaching thesis: equitable CS through visible thinking routines.
-        </p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="proof-practice" aria-labelledby="proof-title">
-    <div class="proof-grid">
-      <div>
-        <h2 id="proof-title" class="section-heading">
-          Courses, projects, and resources from the classroom floor
-        </h2>
-        <p class="measure">
-          A snapshot of what I run, build, and share for teachers, grouped into
-          focused streams.
-        </p>
-      </div>
-
-      <div class="proof-streams">
-        <section class="proof-stream" aria-labelledby="proof-courses-title">
-          <h3 id="proof-courses-title">Courses</h3>
-          <div class="compact-grid">
-            {
-              courses.length ? (
-                courses.map((courseItem) => (
-                  <Card
-                    title={courseItem.data.title}
-                    description={courseItem.data.description}
-                    href={withBase(course(courseItem.slug))}
-                    meta={`${courseItem.data.level} · ${courseItem.data.duration}`}
-                    variant="course"
-                  />
-                ))
-              ) : (
-                <p>Course showcase coming soon.</p>
-              )
-            }
-          </div>
-        </section>
-
-        <section class="proof-stream" aria-labelledby="proof-projects-title">
-          <h3 id="proof-projects-title">Projects</h3>
-          <div class="compact-grid">
-            {
-              projects.length ? (
-                projects.map((projectItem) => (
-                  <Card
-                    title={projectItem.data.title}
-                    description={projectItem.data.description}
-                    href={withBase(project(projectItem.slug))}
-                    meta={`${projectItem.data.year} · ${projectItem.data.role}`}
-                    variant="project"
-                  />
-                ))
-              ) : (
-                <p>Project spotlight coming soon.</p>
-              )
-            }
-          </div>
-        </section>
-
-        <section class="proof-stream" aria-labelledby="proof-resources-title">
-          <h3 id="proof-resources-title">Resources</h3>
-          <div class="compact-grid">
-            {
-              resources.length ? (
-                resources.map((resourceItem) => (
-                  <Card
-                    title={resourceItem.data.title}
-                    description={resourceItem.data.description}
-                    href={withBase(resource(resourceItem.slug))}
-                    meta={resourceItem.data.type}
-                    variant="resource"
-                  />
-                ))
-              ) : (
-                <p>Resource feature coming soon.</p>
-              )
-            }
-          </div>
-        </section>
-      </div>
-    </div>
-  </section>
-
-  <section class="principles" aria-labelledby="principles-title">
-    <h2 id="principles-title" class="section-heading">
-      How I structure learning that lasts
-    </h2>
-    <div class="principles-grid">
-      <article>
-        <h3>Studio over lecture</h3>
-        <p>
-          Students spend most of class making, testing, and critiquing, with
-          mini-lessons at point of need.
-        </p>
-      </article>
-      <article>
-        <h3>Feedback loops first</h3>
-        <p>
-          Every unit includes checkpoints, reflection prompts, and revision
-          cycles so growth is visible.
-        </p>
-      </article>
-      <article>
-        <h3>Identity and access</h3>
-        <p>
-          I anchor technical work in student voice and real-world context to
-          broaden who feels they belong in CS.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section class="conversion-band" aria-labelledby="conversion-title">
-    <h2 id="conversion-title" class="section-heading">
-      Bring this approach to your school or district
-    </h2>
-    <p class="measure">
-      Whether you need curriculum coaching, workshop facilitation, or program
-      strategy, let's design the next step.
-    </p>
-    <div class="actions">
-      <a class="button" href={withBase(contact)}>Start a conversation</a>
-      <a class="button secondary" href={withBase(coursesRoute)}>Explore all courses</a>
-    </div>
-  </section>
+  <HeroSection />
+  <ChoosePathSection />
+  <ProofPracticeSection
+    coursesList={courses}
+    projectsList={projects}
+    resourcesList={resources}
+    showViewAll={true}
+  />
+  <PrinciplesSection />
+  <ConversionBandSection />
 
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 </Layout>
-
-<style>
-  .hero-manifesto,
-  .proof-practice,
-  .principles,
-  .conversion-band {
-    margin-block: 3.5rem;
-  }
-
-  .hero-grid,
-  .proof-grid {
-    display: grid;
-    gap: 1.25rem;
-  }
-
-  .lead {
-    font-size: 1.15rem;
-    max-width: 60ch;
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1.25rem;
-  }
-
-  .signature-block {
-    position: relative;
-    padding: 1.2rem;
-    border-radius: 0.75rem;
-    border: 1px solid color-mix(in oklab, var(--accent, #4f46e5) 40%, white);
-    background: color-mix(in oklab, var(--accent, #4f46e5) 10%, white);
-  }
-
-  .signature-block::before,
-  .signature-block::after {
-    position: absolute;
-    font-size: 2rem;
-    color: color-mix(in oklab, var(--accent, #4f46e5) 55%, black);
-    line-height: 1;
-  }
-
-  .signature-block::before {
-    content: "⟨";
-    top: 0.15rem;
-    left: 0.5rem;
-  }
-
-  .signature-block::after {
-    content: "⟩";
-    right: 0.5rem;
-    bottom: 0.15rem;
-  }
-
-  .signature-block blockquote {
-    margin: 0.6rem 0;
-    font-size: 1.1rem;
-    font-weight: 650;
-  }
-
-  .signature-meta {
-    margin: 0;
-    font-size: 0.95rem;
-  }
-
-  .proof-streams {
-    display: grid;
-    gap: 1rem;
-    align-content: start;
-  }
-
-  .proof-stream {
-    padding: 1rem;
-    border: 1px solid #d8dee9;
-    border-radius: 0.75rem;
-    background: #f8fafc;
-  }
-
-  .proof-stream h3 {
-    margin: 0 0 0.75rem;
-  }
-
-  .compact-grid {
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  .principles-grid {
-    display: grid;
-    gap: 0.9rem;
-  }
-
-  .principles-grid article {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid #d8dee9;
-  }
-
-  .conversion-band {
-    padding: 1.75rem;
-    border-radius: 0.9rem;
-    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
-    border: 1px solid #dbeafe;
-  }
-
-  @media (min-width: 880px) {
-    .hero-grid {
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .proof-grid {
-      grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .proof-streams {
-      margin-top: 1.25rem;
-    }
-
-    .signature-block {
-      margin-top: 2rem;
-    }
-
-    .principles-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-</style>

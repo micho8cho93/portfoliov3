@@ -1,0 +1,32 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, courses, resources } from '../../lib/routes';
+---
+
+<Layout title="Teaching: Lesson Plans" description="Lesson plan cluster page with links to courses and classroom resources.">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Teaching', href: '/teaching' },
+      { label: 'Lesson Plans' }
+    ]}
+  />
+  <h1>Lesson Plans</h1>
+  <p class="measure">Find lesson-ready materials connected to existing courses and practical classroom implementation.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(courses)}>Browse course-aligned lessons</a></li>
+      <li><a href={withBase(resources)}>Explore downloadable classroom resources</a></li>
+      <li><a href={withBase('/teaching/assessment-rubrics')}>Pair lessons with rubrics</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Unit map examples</h3>
+    <h3>Standards alignment notes</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Request implementation support</a></p>
+</Layout>

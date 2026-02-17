@@ -1,6 +1,6 @@
 ---
-import { withBase } from "../../utils/withBase";
-import { resource as resourceRoute } from "../../lib/routes";
+import { withBase } from '../../utils/withBase';
+import { resource as resourceRoute } from '../../lib/routes';
 import Layout from '../../components/Layout.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
@@ -16,6 +16,15 @@ const grouped = resources.reduce((acc, resource) => {
 
 <Layout title="Resources" description="Free classroom-ready tools, templates, and links.">
   <h1>Resources</h1>
+  <p class="measure">Download and use classroom-ready resources that support instruction, assessment, and project-based learning.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase('/teaching/lesson-plans')}>Lesson plan supports</a></li>
+      <li><a href={withBase('/teaching/assessment-rubrics')}>Assessment rubric supports</a></li>
+      <li><a href={withBase('/contact')}>Request a custom resource walkthrough</a></li>
+    </ul>
+  </section>
   {Object.entries(grouped).map(([type, items]) => (
     <section>
       <h2>{type}</h2>
@@ -32,4 +41,5 @@ const grouped = resources.reduce((acc, resource) => {
       </div>
     </section>
   ))}
+  <p><a class="button" href={withBase('/contact')}>Download resources with support</a></p>
 </Layout>

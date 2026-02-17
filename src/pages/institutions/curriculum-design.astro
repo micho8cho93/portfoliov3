@@ -1,0 +1,35 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { withBase } from '../../utils/withBase';
+import { contact, courses, resources } from '../../lib/routes';
+---
+
+<Layout
+  title="Institutions: Curriculum Design"
+  description="Curriculum design cluster page for school and district partnerships."
+>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Institutions', href: '/institutions' },
+      { label: 'Curriculum Design' }
+    ]}
+  />
+  <h1>Curriculum Design</h1>
+  <p class="measure">Plan coherent CS pathways with aligned scope, sequence, and classroom-ready resources.</p>
+  <section>
+    <h2>Start here</h2>
+    <ul>
+      <li><a href={withBase(courses)}>Review existing course structures</a></li>
+      <li><a href={withBase(resources)}>Adapt shared templates and tools</a></li>
+      <li><a href={withBase('/institutions/workshops')}>Coordinate curriculum work with workshops</a></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Future expansion</h2>
+    <h3>Scope and sequence templates</h3>
+    <h3>Implementation planning supports</h3>
+  </section>
+  <p><a class="button" href={withBase(contact)}>Start curriculum design planning</a></p>
+</Layout>

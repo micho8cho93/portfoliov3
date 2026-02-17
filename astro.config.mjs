@@ -7,8 +7,8 @@ const repository = process.env.GITHUB_REPOSITORY?.split('/')[1];
 const repositoryOwner = process.env.GITHUB_REPOSITORY_OWNER;
 const isUserOrOrgPagesSite = repository === `${repositoryOwner}.github.io`;
 
-const fallbackSiteUrl = process.env.PUBLIC_SITE_URL || process.env.SITE_URL || 'https://example.com';
-const fallbackBasePath = process.env.PUBLIC_BASE_PATH || process.env.BASE_PATH || '/';
+const fallbackSiteUrl = process.env.PUBLIC_SITE_URL || process.env.SITE_URL || 'https://micho8cho93.github.io';
+const fallbackBasePath = process.env.PUBLIC_BASE_PATH || process.env.BASE_PATH || '/portfoliov3';
 
 const normalizeSite = (value) => {
   const url = new URL(value);
