@@ -140,26 +140,6 @@ a {
   align-items: center;
 }
 
-.start-here-menu summary {
-  cursor: pointer;
-  list-style: none;
-  font-size: 0.9rem;
-  color: var(--ink-muted);
-}
-
-.start-here-menu ul {
-  margin-top: 0.3rem;
-  justify-content: flex-end;
-}
-
-.start-here-menu a {
-  color: var(--ink-muted);
-  text-decoration: none;
-}
-
-.start-here-menu a:hover {
-  text-decoration: underline;
-}
 
 .nav-link {
   position: relative;
@@ -238,9 +218,6 @@ a {
     align-items: flex-start;
   }
 
-  .start-here-menu ul {
-    justify-content: flex-start;
-  }
 }
 
 main {
